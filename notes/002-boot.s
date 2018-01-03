@@ -1,7 +1,7 @@
 !
 ! boot.s
 !
-.globl begtext, begdata, begbss, endtext, enddata, endbss    ! global symbol for ld86
+.globl begtext, begdata, begbss, endtext, enddata, endbss
 .text
 begtext:
 .data
@@ -9,7 +9,7 @@ begdata:
 .bss
 begbss:
 .text
-BOOTSEG=0x07c0
+BOOTSEG = 0x07c0
 
 entry start
 start:
