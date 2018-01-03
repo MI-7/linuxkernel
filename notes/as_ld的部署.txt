@@ -1,0 +1,16 @@
+看了书上的介绍，取得了网站上的rpm包，在RHEL7.3上装的时候，报需要glibc。
+于是用Yum装了一个2.17版本，但是dev86需要的是2.0/2.1/2.2/2.3。
+老版本的软件暂时不去研究了，在Ubuntu虚拟机里试了一下（大概是14.0的desktop版本）
+
+使用sudo apt-cache search bin86，可以找到：
+bin86 - 16-bin x86 assembler and loader
+
+用sudo apt-get install bin86安装，报错：
+E: Unable to lock the administration directory
+
+ps -aux | grep apt
+把查出来的进程删掉
+
+kill -9 pid, pid...
+
+继续安装，成功，命令as和ld可以运行。
