@@ -10,3 +10,60 @@ sudo apt install bochs
 http://bochs.sourceforge.net/doc/docbook/user/bochsrc.html
 
 新的文件存放在bochs-new目录里面
+
+一些bochs的文件存放路径：
+/etc/bochs-init/: sample bochsrc config file
+/usr/share/bochs: bios rom
+/usr/share/vgabios: vga rom
+
+正式开始干活。。
+按照/etc/bochs-init/bochsrc里面的内容，修改了bochs-new/bochsrc-fda.bxrc文件，
+使用bochs -f bochsrc-fda.bxrc的时候报错：
+bochs panic dlopen failed for module 'floppy_command_delay': file not found
+注释掉以后继续报错：
+'ips': file not found
+查了一下user manual，好像floppy_command_delay没有了？ips也变成：
+cpu: count=2, ips=10000000
+有些option也没了。。比如parport1。。。
+
+这些修改掉以后，可以load bios，但是继续报错：
+Message: ROM: System BIOS must end at oxfffff
+因为老的bios限制64k大小，而新的bochs版本里面带的新bios文件是128k的：BIOS-bochs-latest
+不过里面有一个BIOS-bochs-legacy，貌似是64k的，过会儿试试看...
+
+先看看128k的bios怎么load。。。
+For the new BIOS you simply have to remove the address parameter from the romimage
+directive. You can also you the image called BIOS-bochs-legacy without the new
+features, but with the old start address.
+先把
+romimage: file=/usr/share/bochs/BIOS-bochs-latest, address=0xf0000
+里面的address部分注释掉看看...
+
+起是起来了，但是界面好像显示不出来，加一句：
+display_library: x
+好像还是出不来，装个bochs-x试试看
+sudo apt install bochs-x...但是好像已经装好了
+
+用legacy的bios试试看。。。加上address，也可以load出来
+但是界面好像还是黑的。。。用别的试试看：
+carbon - 应该是deprecated了, not available
+macintosh - not available
+sdl - sudo apt-get install bochs-sdl
+
+用display_library=sdl可以load出来界面
+但是boot好像失败了：
+(0) [0x00000000fffffff0] f000:fff0 (unk. ctxt): (invalid)            ; ffff
+其实不是失败了。。是bochs缺省进入debug模式，停在那里了，只要在命令行输入c或者cont，就继续执行了
+
+查了bochsout.txt，发现两个其他的错误，不过先不管了，用as86 / ld86做一个简单的boot image试试看：
+之前/notes/002-boot.s用as86 -0 -a -o boot.o 002-boot.s编不出来：error reading input
+其实是文件格式的问题，大概在windows上保存的有点问题，可能是line ending，在ubuntu上重新保存一下就可以了：
+继续：ld86 -0 -s -o boot boot.o；也成功了，而且大小也是544，要删掉32字节
+把image做出来：dd bs=32 if=boot of=myboot.img skip=1
+成功：
+16+0 records in
+16+0 records out
+512 bytes copied, 9.0489e-05 s, 5.7 MB/s
+
+把myboot.img拷贝到bochs-new目录下面，修改bochsrc-fda.bxrc文件load这个img文件:
+好像还是load不出来...
