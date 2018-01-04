@@ -1,0 +1,12 @@
+ubuntu里面倒是方便，
+
+apt-cache search bochs
+就能搜到
+
+sudo apt install bochs
+就能安装，还有其他的gui package可以装
+
+安装完毕以后，参照新的user manual修改老的bochs config文件吧。
+http://bochs.sourceforge.net/doc/docbook/user/bochsrc.html
+
+新的文件存放在bochs-new目录里面
