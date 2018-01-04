@@ -1,6 +1,8 @@
 # You many now use double quotes around pathnames, in case
 # your pathname includes spaces.
 
+display_library: sdl
+
 #=======================================================================
 # ROMIMAGE:
 # You now need to load a ROM BIOS into F0000-FFFFF.  I've wiped
@@ -9,7 +11,8 @@
 # directory, named BIOS-bochs-yymmdd.  Use the latest one in there.
 #=======================================================================
 #romimage: bios/BIOS-bochs-970717a
-romimage: file=$BXSHARE\BIOS-bochs-latest, address=0xf0000
+#romimage: file=$BXSHARE\BIOS-bochs-latest, address=0xf0000
+romimage: file=/usr/share/bochs/BIOS-bochs-legacy, address=0xf0000
 #romimage: file=bios/BIOS-bochs-2-processors, address=0xf0000
 #romimage: file=bios/BIOS-bochs-4-processors, address=0xf0000
 #romimage: file=bios/rombios.bin, address=0xf0000
@@ -33,7 +36,8 @@ megs: 16
 # You now need to load a VGA ROM BIOS into C0000.
 #=======================================================================
 #vgaromimage: bios/VGABIOS-lgpl-0.3a
-vgaromimage: $BXSHARE\VGABIOS-elpin-2.40
+#vgaromimage: $BXSHARE\VGABIOS-elpin-2.40
+vgaromimage: file=/usr/share/vgabios/vgabios.bin
 
 #=======================================================================
 # FLOPPYA:
@@ -57,7 +61,8 @@ vgaromimage: $BXSHARE\VGABIOS-elpin-2.40
 #floppya: 1_44=/dev/fd0H1440, status=inserted
 #floppya: 1_2=../1_2, status=inserted
 #floppya: 1_44=a:, status=inserted             # for win32
-floppya: 1_44="bootimage-0.11", status=inserted
+#floppya: 1_44="bootimage-0.11", status=inserted
+floppya: 1_44="myboot.img", status=inserted
 
 #=======================================================================
 # FLOPPYB:
@@ -140,7 +145,7 @@ boot: a
 #   log: /dev/tty
 #=======================================================================
 #log: /dev/null
-log: bochsout.txt
+log: ./bochsout.txt
 
 #=======================================================================
 # LOG CONTROLS
@@ -254,7 +259,7 @@ vga_update_interval: 300000
 # Examples:
 #   keyboard_serial_delay: 200
 #=======================================================================
-keyboard_serial_delay: 200
+keyboard_serial_delay: 250
 
 #=======================================================================
 # KEYBOARD_PASTE_DELAY:
@@ -282,7 +287,7 @@ keyboard_paste_delay: 100000
 # Examples:
 #   floppy_command_delay: 50000
 #=======================================================================
-floppy_command_delay: 50000
+#floppy_command_delay: 500
 
 #=======================================================================
 # IPS:
@@ -304,7 +309,7 @@ floppy_command_delay: 50000
 # 200Mhz Pentium with Linux 2.x                   approx 0.5 Mips
 #
 #=======================================================================
-ips: 4000000
+cpu: count=1, ips=4000000
 
 #=======================================================================
 # mouse: Not used in any of the GUI specific modules, but the option
