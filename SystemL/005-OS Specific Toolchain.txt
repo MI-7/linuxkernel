@@ -1,0 +1,2 @@
+有一个文章暂时跳过了：http://wiki.osdev.org/OS_Specific_Toolchain
+我现在做的是用generic bare target，然后呢，我可以进一步告诉compiler知道更多有关于我的操作系统。

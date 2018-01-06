@@ -1,1 +1,3 @@
-没有超linux bootsect.s，那个有点长，还是超书上的程序吧：002-boot.s
+没有抄linux bootsect.s，那个有点长，还是抄书上的程序吧：002-boot.s
+可以工作，见000-bochs的部署.txt
+

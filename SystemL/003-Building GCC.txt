@@ -1,0 +1,3 @@
+这里还有一个步骤是自己编译gcc：http://wiki.osdev.org/Building_GCC
+
+暂时没有做，我就先用机器自带的gcc做做看吧..

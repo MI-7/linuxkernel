@@ -1,0 +1,78 @@
+GCC Cross-Compiler: http://wiki.osdev.org/GCC_Cross-Compiler
+Why do I need a Cross Compiler?: http://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler%3F
+
+check your current target platform:
+$ gcc -dumpmachine
+x86_64-linux-gnu on ubuntu 16
+x86_64-apple-darwin17.2.0 on my mac
+
+大概意思就是，如果你使用的compiler是为linux做的，那么他会做很多假设，这些assumption都在假定你是为了linux而编译，而你最终要做的是另外一个操作系统A，所以你可以用定制的cross compiler来为你的操作系统A做编译。
+
+以下是你做好cross compiler之后需要注意的一些事情：
+1. Linking with your compiler rather than ld
+你的compiler 就能做linker，不需要再显式调用ld了
+
+2. Using cross-tools
+在你制作你自己的cross-binutils的时候，你会得到一些有用的工具：i686-elf-readelf, i686-elf-as, i686-elf-objdump, i686-elf-objcopy, and more.
+
+这些工具知道如何正确处理有关你的操作系统的任何事情。
+
+3. Options that you should pass to your Compiler
+3.1 -ffreestanding
+This is important as it lets the compiler know it is building a kernel rather than user-space program.  The documentation for GCC says you are required to implement the functions memset, memcpy, memcmp and memmove yourself in freestanding mode.很有趣。
+
+3.2 -mno-red-zone (x86_64 only)
+You need to pass this on x86_64 or interrupts will corrupt the stack. The red zone is a x86_64 ABI feature that means that signals happen 128 bytes further down the stack. Functions that use less than that amount of memory is allowed to not increment the stack pointer. This means that CPU interrupts in the kernel will corrupt the stack. Be sure to pass enable this for all x86_64 kernel code.
+
+3.3 -fno-exceptions, -fno-rtti (C++)
+It is wise to disable C++ features that don't work out-of-the-box in kernels. You need to supply a C++ support library to the kernel (in addition to libgcc) to make all C++ features work. If you don't use these C++ features, it should be sufficient to pass these options.
+
+4. 如何做link - 一些options  （Options you should link with）
+4.1 -nostdlib (same as both -nostartfiles -nodefaultlibs)
+The -nostdlib option is the same as passing both the -nostartfiles -nodefaultlibs options. You don't want the start files (crt0.o, crti.o, crtn.o) in the kernel as they only used for user-space programs. You don't want the default libraries such as libc, because the user-space versions are not suitable for kernel use. You should only pass -nostdlib, as it is the same as passing the two latter options.
+
+-lgcc
+You disable the important libgcc library when you pass -nodefaultlibs (implied by -nostdlib). The compiler needs this library for many operations that it cannot do itself or that is more efficient to put into a shared function. You must pass this library at the end of the link line, after all the other object files and libraries, or the linker won't use it and you get strange linker errors. This is due to the classic static linking model where an object file from a static library is only pulled in if it is used by a previous object file. Linking with libgcc must come after all the object files that might use it.
+
+5. 不要用这些options： Options that you shouldn't pass to your Compiler
+5.1 -m32, -m64 (compiler)
+If you build a cross-compiler such as i686-elf-gcc, then you don't need to tell it to make a 32-bit executable. Likewise, you don't need to pass -m64 to x86_64-elf-gcc. This will make your Makefiles much simpler as you can simply select the correct compiler and things will work. You can use x86_64-elf-gcc to build a 32-bit kernel, but it's much easier to just build two cross-compilers and use them. In addition, using a cross-compiler for every CPU you target will make it easy to port third-party software without tricking them into passing -m32 as well.
+
+-melf_i386, -melf_x86_64 (linker)
+You don't need to pass these for the same reason as -m32 and -m64. Additionally, these options are for ld, and you shouldn't be invoking ld directly in the first place, but rather linking with your cross-compiler.
+
+-32, -64 (assembler)
+The cross-assembler (i686-elf-as) defaults to the platform you specified when building binutils, and so you don't need to repeat the choice here. You can use the cross-compiler as an assembler, but it is okay to call the assembler directly.
+
+-nostdinc
+You shouldn't pass this option as it disables the standard header include directories. However, you do want to use these headers as they contain many useful declarations. The cross-compiler comes with a bunch of useful headers such as stddef.h, stdint.h, stdarg.h, and more.
+
+If you don't use a cross-compiler, you get the headers for your host platform (such as Linux) which are unsuitable for your operating system. For that reason, most people that don't use a cross-compiler use this option and then have to reimplement stddef.h, stdint.h, stdarg.h and more themselves. People often implement those files incorrectly as you need compiler magic to implement features such as stdarg.h.
+
+-fno-builtin
+This option is implied by -ffreestanding and there is no reason to pass it yourself. The compiler defaults to -fbuiltin that enables builtins, but -fno-builtin disables them. Builtins mean that the compiler knows about standard features and can optimize their use. If the compiler sees a function called 'strlen', it normally assumes it is the C standard 'strlen' function and it is able to optimize the expression strlen("foo") into 3 at compile time, instead of calling the function. This option has value if you are creating some really non-standard environment in which common C functions don't have their usual semantics. It is possible to enable builtins again with -fbuiltin following -ffreestanding but this can lead to surprising problems down the road, such as the implementation of calloc (malloc + memset) being optimized into a call to calloc itself.
+
+-fno-stack-protector
+The Stack Smashing Protector is a feature that stores a random value on the stack of selected functions and verifies the value is intact upon return. This statistically prevents stack buffer overflows overwriting the return pointer on the stack, which would subvert control flow. Adversaries are often able to exploit such faults, and this feature requires the adversary to correctly guess a 32-bit value (32-bit systems) or a 64-bit value (64-bit systems). This security feature requires runtime support. Compilers from many operating system vendors enable this feature by having -fstack-protector be the default. This breaks kernels that don't use a cross-compiler, if they don't have the runtime support. Cross-compilers such as the *-elf targets have the stack protector disabled by default and there's no reason to disable it yourself. You may want to change the default to enabling it when you add support for it to your kernel (and user-space), which would make it automatically used by your kernel because you didn't pass this option.
+
+6. 如果没有cross compiler，会发生什么？
+6.1 编译命令变得很复杂More complicated compilation commands
+也就是每次编译都要带上一堆的options...比如-32
+
+6.2 Reimplementing libgcc
+You cannot use the host libgcc when building a kernel. The Linux libgcc has some nasty dependencies last timed I checked. The common case newbies run into is 64-bit integer division on 32-bit systems, but the compiler may generate such calls in many cases. You will often end up rewriting libgcc when you should have been using the real thing in the first place.
+
+6.3 Rewriting freestanding headers (often incorrectly)
+If you don't pass -nostdinc you get the target system headers (which is your local system if not using a cross-compiler), and that will cause a lot of problems in the non-cross-compiler case. You will end up rewriting the standard freestanding headers such as stdarg.h, stddef.h, stdint.h. and more. Unfortunately, as mentioned above, these headers need a bit of compiler magic to get just right. If you use a cross-compiler, all these freestanding headers can be used out of the box with no effort.
+
+6.4 Complicated compiling user-space programs
+You need to pass even more options to the command lines that build programs for your operating systems. You need a -Ipath/to/myos/include and -Lpath/to/myos/lib to use the C library, and more. If you set up an OS Specific Toolchain, you just need
+i686-myos-gcc hello.c -o hello
+
+6.5 Compiler releases break your OS
+Not everyone is using the same gcc as you are, which means that people on other operating systems (even versions, or compiler releases) will have trouble building your operating system correctly. If you use a cross-compiler, then everyone is using the same compiler version and assumptions about the host system won't make it into your operating system.
+
+
+
+7. When do I not need a cross-compiler?
+If you create a real operating system and manage to port gcc to it, that gcc will produce the very same code as i686-myos-gcc. That means that you don't need a cross-compiler on your own operating system, because the gcc there will already do the right thing. This is why the Linux kernel is built with the Linux gcc, instead of a Linux cross-compiler.

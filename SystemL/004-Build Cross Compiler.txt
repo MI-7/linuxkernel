@@ -1,0 +1,102 @@
+继续002文档，另外一篇有用的文章：
+https://stackoverflow.com/questions/9450394/how-to-install-gcc-piece-by-piece-with-gmp-mpfr-mpc-elf-without-shared-libra
+
+================1================
+背景知识：Target Triplet（http://wiki.osdev.org/Target_Triplet）
+Target Triplets describe a platform on which code runs
+Target Triplets = name of the CPU family/model + vendor + the operating system name
+
+you can check it by:
+gcc -dumpmachine
+
+it will return something like:
+x86_64-linux-gnu, on ubuntu
+x86_64-apple-darwin17.2.0, on my mac
+
+Target Triplet - 结构：
+machine-vendor-operatingsystem
+
+比如：
+x86_64-unknown-freebsd
+
+vendor field is mostly irrelevant and is usually 'pc' for 32-bit x86 systems or 'unknown' or 'none' for other systems
+
+有的时候os有两个字段：linux-gnu，所以有可能字串是这样的：
+x86_64-unknown-linux-gnu
+
+这样的不带vendor的字串看起来就不太好辨认了：
+x86_64-linux-gnu
+
+Target Triplet - 原理
+Target triplets are intended to be systematic unambiguous platform names (well, after disambiguation). They lets build systems understand exactly which system the code will run on and allows enabling platform-specific features automatically. In any compilation setting, there are usually three platforms involved (which might be the same three ones):
+
+* Build Platform: This is the platform on which the compilation tools are executed.
+* Host Platform: This is the platform on which the code will eventually run.
+* Target Platform: If this is a compiler, this is the platform that the compiler will generate code for.
+
+你可以用一个前缀来代表你的工具，比如：
+x86_64-myos-gcc
+
+你也可以在早期使用一些通用的target名字，比如：
+i686-elf
+x86_64-elf
+arm-none-eabi
+aarch64-none-elf
+
+These are bare targets meant for freestanding programs (bootloaders and kernels) that don't have a user-space.
+
+================2================
+接下来准备build gcc，需要安装以下工具：
+* A Unix-like environment (Windows users)
+ubuntu 16.0.x
+* GCC (existing release you wish to replace)
+ubuntu自带，5.4.0 20160609
+* binutils = 2.26.1
+* G++ (if building a version of GCC >= 4.8.0)
+ubuntu自带的是g++ 5.4.0 20160609，和gcc一样的版本号
+* GNU Make
+一般都有make，不需要安装
+version=4.1
+* GNU Bison
+sudo apt-get install bison
+version=3.0.4
+* Flex
+sudo apt-get install flex / flex-old
+versio=flex 2.6.0
+* GNU GMP
+sudo apt-get install libgmp3-dev
+版本=6.1.0
+* GNU MPFR
+sudo apt-get install libmpfr-dev
+版本=3.1.4
+* GNU MPC
+找到两个：libmpc-dev和libmpc3，按照上面的装dev吧。。版本是1.0.3
+sudo apt-get install libmpc-dev
+* Texinfo
+sudo apt-get install texinfo
+version=6.1.0.dfsg.1-5
+* ISL (optional)
+没装
+* CLooG (optional)
+没装
+
+
+================3================
+接下来下载源代码:
+You can download the desired Binutils release by visiting the Binutils website (https://gnu.org/software/binutils/) or directly accessing the GNU main FTP mirror (ftp://ftp.gnu.org/gnu/binutils/).
+用了2.26.1
+
+You can download the desired GCC release by visiting the GCC website (https://gnu.org/software/gcc/) or directly accessing the GNU main FTP mirror (ftp://ftp.gnu.org/gnu/gcc/).
+下载了5.4.0 branch的代码
+
+In addition, to build GCC you need to have installed GNU GMP, GNU MPFR, GNU Mpc and the ISL library. You may already have these libraries and the development files installed, but this tutorial builds them as part of GCC. If you don't need this, simply don't build them as part of GCC. Note that not all GMP, MPFR and Mpc combinations are compatible with a given GCC release. You also need Texinfo to build Binutils.
+- You can download GNU GMP from its website - http://gmplib.org/. (libgmp3-dev on apt-based systems, dev-libs/gmp on Gentoo, gmp-devel on Fedora, libgmp-devel on Cygwin)
+- You can download GNU MPFR from its website - http://mpfr.org/. (libmpfr-dev on apt-based systems, dev-libs/mpfr on Gentoo, mpfr-devel on Fedora, libmpfr-devel on Cygwin)
+- You can download ISL from its website (optional) - http://isl.gforge.inria.fr/. (libisl-dev on apt-based systems, libisl-devel on Cygwin)
+- You can download ClooG from its website (optional) - http://www.cloog.org/. (libcloog-isl-dev on apt-based systems, libcloog-isl-devel on Cygwin)
+- You can download GNU Mpc from its website - http://multiprecision.org/. (libmpc-dev on apt-based systems, dev-libs/mpc on Gentoo, libmpc-devel on Fedora, libmpc-devel on Cygwin)
+- You can download GNU Texinfo from its website - https://www.gnu.org/software/texinfo/. (texinfo on apt-based systems, texinfo on Arch Linux, sys-apps/texinfo on Gentoo, texinfo on Cygwin)
+- Download the needed source code into a suitable directory such as $HOME/src.
+
+An alternative way to download GMP, MPFR and Mpc is to go to the top level directory of the GCC source code (i.e. gcc-x.y.z/) and type the following:
+        contrib/download_prerequisites

@@ -67,3 +67,21 @@ sdl - sudo apt-get install bochs-sdl
 
 把myboot.img拷贝到bochs-new目录下面，修改bochsrc-fda.bxrc文件load这个img文件:
 好像还是load不出来...
+
+我把floppya那段注释掉以后，bios能够被load出来，address好像是不用指定了，说是bochs自动计算。
+bios load出来以后，会去找a盘（根据配置文件）继续启动。
+所以问题不出在bios这里，而是bios之后。。。也就是那个做出来的img
+
+其实还是有点小改动的，我把floppya的address从0xf0000改成了0xffff0000，按照bochs的文档，再试一下把floppya加进去。
+然后。。。哇哈哈，myboot.img被load出来了，显示了：BootLohahahahaha.....，
+我想应该是address那段写错了，有些东西被load到了错误的地方，是32位系统和64位系统的差别吗？还是16位与32位的差别？照理说0xf000是对的，这是16位的地址，所以ubuntu上的bochs应该是跑在了某种模式下，使用了32位地址。
+Normally, you can use a precompiled BIOS in the source or binary distribution called BIOS-bochs-latest.
+The default ROM BIOS is usually loaded starting at address 0xfffe0000, and it is exactly 128k long.
+The legacy version of the Bochs BIOS is usually loaded starting at address 0xffff0000, and it is exactly 64k long.
+
+boot以后呢？接着看书吧。。。
+
+中途看了看as86的介绍：http://wiki.osdev.org/AS86
+说as86已经比较老了，而且维护的也不太好，建议使用替代的工具：YASM; NASM; FASM
+不过还是先看书看下去吧...
+

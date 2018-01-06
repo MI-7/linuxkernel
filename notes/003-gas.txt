@@ -1,0 +1,22 @@
+gas = GNU Assembler
+
+gas is part of binutils package
+
+GCC generates assembly source code and automatically invokes GAS which assembles the code into machine code in an object file
+
+两种assembly code语法：
+AT&T Syntax / Intel Syntax
+
+binutils下载地址：
+http://ftp.gnu.org/gnu/binutils/
+
+ubuntu上安装： sudo apt-get install binutils
+
+$ as -v
+GNU assembler version 2.26.1 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.26.1
+
+$ gcc -v
+gcc version 5.4.0 20160609
+
+binutils 2.29文档：
+http://sourceware.org/binutils/docs-2.29/
