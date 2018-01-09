@@ -1,0 +1,20 @@
+new project (c++, win, empty project)
+右键点project -> build dependencies -> build customizations -> 选择masm
+新建文件aaa.asm
+右键点aaa.asm -> properties -> general -> item type -> 配置成Microsoft Macro Assembler
+然后可以开始build
+参考油管：https://www.youtube.com/watch?v=LqyVybUodXE
+
+如果出现build错误：
+1>LINK : fatal error LNK1221: a subsystem can't be inferred and must be defined
+右键点project，点击配置：
+Project Properties -> Configuration Properties -> Linker -> System -> SubSystem
+选择windows...继续，其他的选项没研究
+参考URL：https://stackoverflow.com/questions/7775281/link-fatal-error-lnk1221-a-subsystem-cant-be-inferred-and-must-be-defined
+
+debug -> start debugging开始debug，在文件中设定break point
+debug -> windows -> memory 点开memory 1
+                 -> 选择registers
+
+
+参考书的网站：http://kipirvine.com/asm/gettingStartedVS2017/index.htm
