@@ -18,3 +18,5 @@ debug -> windows -> memory 点开memory 1
 
 
 参考书的网站：http://kipirvine.com/asm/gettingStartedVS2017/index.htm
+
+GAS / NASM的比较：https://www.ibm.com/developerworks/cn/linux/l-gas-nasm.html
