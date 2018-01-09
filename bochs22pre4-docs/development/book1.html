@@ -1,0 +1,534 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Bochs Developers Guide</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="NEXT"
+TITLE="Resources for developers"
+HREF="resources.html"></HEAD
+><BODY
+CLASS="BOOK"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="BOOK"
+><A
+NAME="AEN1"
+></A
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+><A
+NAME="AEN2"
+>Bochs Developers Guide</A
+></H1
+><H3
+CLASS="AUTHOR"
+><A
+NAME="AEN5"
+></A
+>Kevin Lawton</H3
+><H3
+CLASS="AUTHOR"
+><A
+NAME="AEN8"
+></A
+>Bryce Denney</H3
+><H3
+CLASS="AUTHOR"
+><A
+NAME="AEN11"
+></A
+>Christophe Bothamy</H3
+><H4
+CLASS="EDITEDBY"
+>Edited by</H4
+><H3
+CLASS="EDITOR"
+>Michael Calabrese</H3
+><HR></DIV
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+>1. <A
+HREF="resources.html"
+>Resources for developers</A
+></DT
+><DD
+><DL
+><DT
+>1.1. <A
+HREF="resources.html#AEN20"
+>Setting up CVS write access</A
+></DT
+><DD
+><DL
+><DT
+>1.1.1. <A
+HREF="resources.html#AEN23"
+>Install ssh and cvs</A
+></DT
+><DT
+>1.1.2. <A
+HREF="resources.html#AEN36"
+>ssh to cvs.sf.net</A
+></DT
+><DT
+>1.1.3. <A
+HREF="resources.html#AEN44"
+>Set CVS_RSH environment variable to ssh</A
+></DT
+><DT
+>1.1.4. <A
+HREF="resources.html#AEN48"
+>cvs checkout</A
+></DT
+></DL
+></DD
+><DT
+>1.2. <A
+HREF="using-cvs-write-access.html"
+>Using CVS write access</A
+></DT
+><DD
+><DL
+><DT
+>1.2.1. <A
+HREF="using-cvs-write-access.html#AEN59"
+>Checking in files</A
+></DT
+></DL
+></DD
+><DT
+>1.3. <A
+HREF="trackers.html"
+>SourceForge bug, feature, and patch trackers</A
+></DT
+><DT
+>1.4. <A
+HREF="other.html"
+>Ideas for other sections</A
+></DT
+></DL
+></DD
+><DT
+>2. <A
+HREF="about-the-code.html"
+>About the code</A
+></DT
+><DD
+><DL
+><DT
+>2.1. <A
+HREF="about-the-code.html#AEN85"
+>How to add keymapping in a GUI client</A
+></DT
+><DT
+>2.2. <A
+HREF="directory-structure.html"
+>Directory Structure</A
+></DT
+><DT
+>2.3. <A
+HREF="configure-scripting.html"
+>Configure Scripting</A
+></DT
+><DT
+>2.4. <A
+HREF="logfunctions.html"
+>Log Functions</A
+></DT
+><DT
+>2.5. <A
+HREF="emulator-objects.html"
+>Emulator Objects</A
+></DT
+><DT
+>2.6. <A
+HREF="timers.html"
+>timers</A
+></DT
+><DT
+>2.7. <A
+HREF="sb16-emulation-basics.html"
+>Sound Blaster 16 Emulation</A
+></DT
+><DD
+><DL
+><DT
+>2.7.1. <A
+HREF="sb16-emulation-basics.html#AEN118"
+>How well does it work?</A
+></DT
+><DT
+>2.7.2. <A
+HREF="sb16-emulation-basics.html#AEN123"
+>Output to a sound card</A
+></DT
+><DT
+>2.7.3. <A
+HREF="sb16-emulation-basics.html#AEN126"
+>Installation on Linux</A
+></DT
+><DT
+>2.7.4. <A
+HREF="sb16-emulation-basics.html#AEN131"
+>Configuring bochs</A
+></DT
+><DT
+>2.7.5. <A
+HREF="sb16-emulation-basics.html#AEN139"
+>Runtime configuration</A
+></DT
+><DT
+>2.7.6. <A
+HREF="sb16-emulation-basics.html#AEN144"
+>Features planned for the future</A
+></DT
+><DT
+>2.7.7. <A
+HREF="sb16-emulation-basics.html#AEN151"
+>Description of the sound output classes</A
+></DT
+><DT
+>2.7.8. <A
+HREF="sb16-emulation-basics.html#AEN157"
+>Files</A
+></DT
+><DT
+>2.7.9. <A
+HREF="sb16-emulation-basics.html#AEN167"
+>Classes</A
+></DT
+><DT
+>2.7.10. <A
+HREF="sb16-emulation-basics.html#AEN184"
+>Methods</A
+></DT
+><DT
+>2.7.11. <A
+HREF="sb16-emulation-basics.html#AEN191"
+>bx_sound_OS_c(bx_sb16_c*sb16)</A
+></DT
+><DT
+>2.7.12. <A
+HREF="sb16-emulation-basics.html#AEN205"
+>~bx_sound_OS_c()</A
+></DT
+><DT
+>2.7.13. <A
+HREF="sb16-emulation-basics.html#AEN208"
+>int openmidioutput(char *device)</A
+></DT
+><DT
+>2.7.14. <A
+HREF="sb16-emulation-basics.html#AEN220"
+>Description of the parameters:</A
+></DT
+><DT
+>2.7.15. <A
+HREF="sb16-emulation-basics.html#AEN230"
+>int midiready()</A
+></DT
+><DT
+>2.7.16. <A
+HREF="sb16-emulation-basics.html#AEN246"
+>int sendmidicommand(int delta, int command, int length, Bit8u data[])</A
+></DT
+><DT
+>2.7.17. <A
+HREF="sb16-emulation-basics.html#AEN268"
+>int closemidioutput()</A
+></DT
+><DT
+>2.7.18. <A
+HREF="sb16-emulation-basics.html#AEN280"
+>int openwaveoutput(char *device)</A
+></DT
+><DT
+>2.7.19. <A
+HREF="sb16-emulation-basics.html#AEN314"
+>int startwaveplayback(int frequency, int bits, int stereo, int format)</A
+></DT
+><DT
+>2.7.20. <A
+HREF="sb16-emulation-basics.html#AEN387"
+>int waveready()</A
+></DT
+><DT
+>2.7.21. <A
+HREF="sb16-emulation-basics.html#AEN397"
+>int sendwavepacket(int length, Bit8u data[])</A
+></DT
+><DT
+>2.7.22. <A
+HREF="sb16-emulation-basics.html#AEN441"
+>int stopwaveplayback()</A
+></DT
+><DT
+>2.7.23. <A
+HREF="sb16-emulation-basics.html#AEN448"
+>int closewaveoutput()</A
+></DT
+></DL
+></DD
+><DT
+>2.8. <A
+HREF="harddisk-redologs.html"
+>Harddisk Images based on redologs</A
+></DT
+><DD
+><DL
+><DT
+>2.8.1. <A
+HREF="harddisk-redologs.html#AEN470"
+>Description</A
+></DT
+><DT
+>2.8.2. <A
+HREF="harddisk-redologs.html#AEN479"
+>How redologs works ?</A
+></DT
+><DT
+>2.8.3. <A
+HREF="harddisk-redologs.html#AEN572"
+>Parameters</A
+></DT
+><DT
+>2.8.4. <A
+HREF="harddisk-redologs.html#AEN736"
+>Redolog class description</A
+></DT
+><DT
+>2.8.5. <A
+HREF="harddisk-redologs.html#AEN788"
+>Disk image classes description</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>3. <A
+HREF="debugger.html"
+>Debugger</A
+></DT
+><DD
+><DL
+><DT
+>3.1. <A
+HREF="debugger.html#AEN886"
+>compile with debugger support</A
+></DT
+><DT
+>3.2. <A
+HREF="debugger-get-started.html"
+>get started in debugger</A
+></DT
+><DT
+>3.3. <A
+HREF="debugger-commands.html"
+>command reference</A
+></DT
+><DT
+>3.4. <A
+HREF="debugger-techniques.html"
+>techniques</A
+></DT
+></DL
+></DD
+><DT
+>4. <A
+HREF="coding.html"
+>Coding</A
+></DT
+><DD
+><DL
+><DT
+>4.1. <A
+HREF="coding.html#AEN904"
+>coding conventions</A
+></DT
+><DT
+>4.2. <A
+HREF="patches.html"
+>patches:</A
+></DT
+><DT
+>4.3. <A
+HREF="cvs-release.html"
+>Building a Bochs release</A
+></DT
+><DD
+><DL
+><DT
+>4.3.1. <A
+HREF="cvs-release.html#AEN914"
+>Preparing source files and CVS</A
+></DT
+><DT
+>4.3.2. <A
+HREF="cvs-release.html#AEN923"
+>Building the release on win32</A
+></DT
+><DT
+>4.3.3. <A
+HREF="cvs-release.html#AEN944"
+>Building the release on Linux</A
+></DT
+><DT
+>4.3.4. <A
+HREF="cvs-release.html#AEN951"
+>Uploading files and creating a file release on SF</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>5. <A
+HREF="webmastering.html"
+>Webmastering</A
+></DT
+><DD
+><DL
+><DT
+>5.1. <A
+HREF="webmastering.html#WEBSITES"
+>websites</A
+></DT
+><DT
+>5.2. <A
+HREF="shell-access.html"
+>shell access to the website</A
+></DT
+><DT
+>5.3. <A
+HREF="repository.html"
+>website html repository</A
+></DT
+><DT
+>5.4. <A
+HREF="site-update.html"
+>automatic site update</A
+></DT
+><DT
+>5.5. <A
+HREF="other-content.html"
+>other content</A
+></DT
+><DT
+>5.6. <A
+HREF="available-tools.html"
+>available tools</A
+></DT
+></DL
+></DD
+></DL
+></DIV
+><DIV
+CLASS="LOT"
+><DL
+CLASS="LOT"
+><DT
+><B
+>List of Tables</B
+></DT
+><DT
+>2-1. <A
+HREF="sb16-emulation-basics.html#AEN338"
+>format bits</A
+></DT
+><DT
+>2-2. <A
+HREF="sb16-emulation-basics.html#AEN362"
+>codecs</A
+></DT
+><DT
+>2-3. <A
+HREF="sb16-emulation-basics.html#AEN420"
+>wave output types</A
+></DT
+><DT
+>2-4. <A
+HREF="harddisk-redologs.html#AEN493"
+>Generic header description</A
+></DT
+><DT
+>2-5. <A
+HREF="harddisk-redologs.html#AEN534"
+>Redolog specific header description</A
+></DT
+><DT
+>2-6. <A
+HREF="harddisk-redologs.html#AEN575"
+>How number of entries in the catalog and number of blocks by extents are computed</A
+></DT
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="resources.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Resources for developers</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>
