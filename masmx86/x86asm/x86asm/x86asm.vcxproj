@@ -123,9 +123,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <MASM Include="0-template.asm" />
-    <MASM Include="1-first.asm">
+    <MASM Include="1-addtwo-32bit.asm">
       <FileType>Document</FileType>
     </MASM>
+    <MASM Include="2-addtwo-64bit.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,10 +7,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="1-first.asm">
+    <MASM Include="0-template.asm">
       <Filter>ch3</Filter>
     </MASM>
-    <MASM Include="0-template.asm">
+    <MASM Include="1-addtwo-32bit.asm">
+      <Filter>ch3</Filter>
+    </MASM>
+    <MASM Include="2-addtwo-64bit.asm">
       <Filter>ch3</Filter>
     </MASM>
   </ItemGroup>
