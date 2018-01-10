@@ -1,13 +1,16 @@
-; Program template (Template.asm)
+; Template File
+
 .386
 .model flat,stdcall
 .stack 4096
-ExitProcess PROTO, dwExitCode:DWORD
+ExitProcess proto,dwExitCode:dword
+
 .data
-; declare variables here
+; declare your variables here
+
 .code
-main PROC
-; write your code here
-INVOKE ExitProcess,0
-main ENDP
-END main
+your_proc proc
+    ; your code here
+	invoke ExitProcess,0
+your_proc endp
+end your_proc

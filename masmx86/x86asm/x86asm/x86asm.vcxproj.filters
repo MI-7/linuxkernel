@@ -10,5 +10,8 @@
     <MASM Include="1-first.asm">
       <Filter>ch3</Filter>
     </MASM>
+    <MASM Include="0-template.asm">
+      <Filter>ch3</Filter>
+    </MASM>
   </ItemGroup>
 </Project>
