@@ -1,4 +1,6 @@
 http://wiki.osdev.org/GRUB
+gnu grub: https://www.gnu.org/software/grub/
+multi boot spec: https://www.gnu.org/software/grub/manual/multiboot/multiboot.html
 现在版本系列为2系列，比老的GRUB legacy版本0.97有很大的改进。
 
 Features:
@@ -26,3 +28,4 @@ grub-macbless         grub-mkrelpath        grub-set-default
 grub-menulst2cfg      grub-mkrescue         grub-syslinux2cfg
 
 
+multiboot标准定义的header，请参见009-CodeBootLoader中的注释

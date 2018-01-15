@@ -6,8 +6,8 @@
 .set CHECKSUM, -(MAGIC + FLAGS) /* checksum of above, to prove we are multiboot */
 
 /*
-  grammar:
-  .set symbol, expression
+  as document: https://sourceware.org/binutils/docs/as/
+  <grammar>  .set symbol, expression
   Set the value of symbol to expression.
   This changes symbol¡¯s value and type to conform to expression.
 */
@@ -24,6 +24,57 @@ forced to be within the first 8 KiB of the kernel file.
 .long MAGIC
 .long FLAGS
 .long CHECKSUM
+
+/*
+https://www.gnu.org/software/grub/manual/multiboot/multiboot.html
+3.1.1 The layout of Multiboot header
+The layout of the Multiboot header must be as follows:
+
+Offset	Type	Field Name	    Note
+0       u32   magic           required
+- The field ¡®magic¡¯ is the magic number identifying the header, which must be the hexadecimal value 0x1BADB002.
+
+4       u32   flags           required
+- Bits 0-15 indicate requirements
+
+- If bit 0 in the ¡®flags¡¯ word is set, then all boot modules loaded along with the
+  operating system must be aligned on page (4KB) boundaries.
+
+- If bit 1 in the ¡®flags¡¯ word is set, then information on available memory via at least
+  the ¡®mem_*¡¯ fields of the Multiboot information structure (see Boot information format)
+  must be included. If the boot loader is capable of passing a memory map (the ¡®mmap_*¡¯ fields)
+  and one exists, then it may be included as well.
+
+8       u32   checksum        required 
+12      u32   header_addr     if flags[16] is set
+16      u32   load_addr       if flags[16] is set
+20      u32   load_end_addr   if flags[16] is set
+24      u32   bss_end_addr    if flags[16] is set
+28      u32   entry_addr      if flags[16] is set
+32      u32   mode_type       if flags[2] is set
+36      u32   width           if flags[2] is set
+40      u32   height          if flags[2] is set
+44      u32   depth           if flags[2] is set
+*/
+
+/*
+  <grammar>  .section name
+  Use the .section directive to assemble the following code into a section named name.
+  This directive is only supported for targets that actually support arbitrarily named sections
+  
+  <grammar>  .align abs-expr, abs-expr, abs-expr
+  Pad the location counter (in the current subsection) to a particular storage boundary.
+  The first expression (which must be absolute) is the alignment required
+  
+  The second expression (also absolute) gives the fill value to be stored in the padding bytes.
+  It (and the comma) may be omitted. If it is omitted, the padding bytes are normally zero.
+  
+  The third expression is also absolute, and is also optional. If it is present,
+  it is the maximum number of bytes that should be skipped by this alignment directive.
+  
+  <grammar>  .long expressions
+  .long = 32 bits; .int = 16 bits; .byte = 8 bits
+*/
 
 /*
 The multiboot standard does not define the value of the stack pointer register
