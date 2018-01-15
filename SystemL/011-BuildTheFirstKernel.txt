@@ -1,3 +1,53 @@
-�Ұ����γ���boot.s��kernel.c���ŵ��µ�Ŀ¼�£�firstkernel
-���ȱ���boot.s��
+我把两段程序（boot.s和kernel.c）放到新的目录下：firstkernel
+首先编译boot.s：
 i686-elf-as boot.s -o boot.o
+从windows过去的文件多半要用对面的编辑器保存一下，比如gedit，
+ubuntu上用的格式是不带BOM的UTF-8 encoding
+
+然后执行：
+i686-elf-gcc -c kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+
+Linking (save to linker.ld):
+/* The bootloader will look at this image and start execution at the symbol
+   designated as the entry point. */
+ENTRY(_start)
+
+/* Tell where the various sections of the object files will be put in the final
+   kernel image. */
+SECTIONS
+{
+	/* Begin putting sections at 1 MiB, a conventional place for kernels to be
+	   loaded at by the bootloader. */
+	. = 1M;
+
+	/* First put the multiboot header, as it is required to be put very early
+	   early in the image or the bootloader won't recognize the file format.
+	   Next we'll put the .text section. */
+	.text BLOCK(4K) : ALIGN(4K)
+	{
+		*(.multiboot)
+		*(.text)
+	}
+
+	/* Read-only data. */
+	.rodata BLOCK(4K) : ALIGN(4K)
+	{
+		*(.rodata)
+	}
+
+	/* Read-write data (initialized) */
+	.data BLOCK(4K) : ALIGN(4K)
+	{
+		*(.data)
+	}
+
+	/* Read-write data (uninitialized) and stack */
+	.bss BLOCK(4K) : ALIGN(4K)
+	{
+		*(COMMON)
+		*(.bss)
+	}
+
+	/* The compiler may produce other sections, by default it will put them in
+	   a segment with the same name. Simply add stuff here as needed. */
+}
