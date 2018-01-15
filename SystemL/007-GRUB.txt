@@ -15,3 +15,14 @@ $grub-mkimage --version
 grub-mkimage (GRUB) 2.02~beta2-36ubuntu3.12
 
 grub相关的工具有很多：
+grub-bios-setup       grub-mkconfig         grub-mkstandalone
+grub-editenv          grub-mkdevicemap      grub-mount
+grub-file             grub-mkfont           grub-ntldr-img
+grub-fstest           grub-mkimage          grub-probe
+grub-glue-efi         grub-mklayout         grub-reboot
+grub-install          grub-mknetdir         grub-render-label
+grub-kbdcomp          grub-mkpasswd-pbkdf2  grub-script-check
+grub-macbless         grub-mkrelpath        grub-set-default
+grub-menulst2cfg      grub-mkrescue         grub-syslinux2cfg
+
+
