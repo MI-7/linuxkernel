@@ -1,0 +1,3 @@
+我把两段程序（boot.s和kernel.c）放到新的目录下：firstkernel
+首先编译boot.s：
+i686-elf-as boot.s -o boot.o
