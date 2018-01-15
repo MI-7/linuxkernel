@@ -1,5 +1,5 @@
-http://wiki.osdev.org/GRUB
-���ڰ汾ϵ��Ϊ2ϵ�У����ϵ�GRUB legacy�汾0.97�кܴ�ĸĽ���
+﻿http://wiki.osdev.org/GRUB
+现在版本系列为2系列，比老的GRUB legacy版本0.97有很大的改进。
 
 Features:
 * Basic scripting support
@@ -10,8 +10,8 @@ Features:
 * Internationalization
 * Rescue mode
 
-Ubuntu�ϵ�grub�汾��2.0.2:
+Ubuntu上的grub版本是2.0.2:
 $grub-mkimage --version
 grub-mkimage (GRUB) 2.02~beta2-36ubuntu3.12
 
-grub��صĹ����кࣺܶ
+grub相关的工具有很多：
