@@ -1,0 +1,17 @@
+http://wiki.osdev.org/GRUB
+现在版本系列为2系列，比老的GRUB legacy版本0.97有很大的改进。
+
+Features:
+* Basic scripting support
+* GUI (better bootsplash support, custom colors, custom themes, ...)
+* Memory management
+* Cleaner design
+* Better portability
+* Internationalization
+* Rescue mode
+
+Ubuntu上的grub版本是2.0.2:
+$grub-mkimage --version
+grub-mkimage (GRUB) 2.02~beta2-36ubuntu3.12
+
+grub相关的工具有很多：
