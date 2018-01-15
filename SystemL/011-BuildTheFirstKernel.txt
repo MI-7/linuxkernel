@@ -8,6 +8,8 @@ ubuntu上用的格式是不带BOM的UTF-8 encoding
 i686-elf-gcc -c kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 
 Linking (save to linker.ld):
+i686-elf-gcc -T linker.ld -o myos.bin -ffreestanding -O2 -nostdlib boot.o kernel.o -lgcc
+
 /* The bootloader will look at this image and start execution at the symbol
    designated as the entry point. */
 ENTRY(_start)
@@ -51,3 +53,42 @@ SECTIONS
 	/* The compiler may produce other sections, by default it will put them in
 	   a segment with the same name. Simply add stuff here as needed. */
 }
+
+
+然后测试multiboot：
+if grub-file --is-x86-multiboot myos.bin; then
+  echo multiboot confirmed
+else
+  echo the file is not multiboot
+fi
+
+然后创建grub目录结构：
+mkdir -p isodir/boot/grub
+cp myos.bin isodir/boot/myos.bin
+cp grub.cfg isodir/boot/grub/grub.cfg
+grub-mkrescue -o myos.iso isodir
+
+grub.cfg内容：
+menuentry "myos" {
+	multiboot /boot/myos.bin
+}
+
+
+在QEMU上测试，Testing your operating system (QEMU)：
+qemu-system-i386 -cdrom myos.iso
+Additionally, QEMU supports booting multiboot kernels directly without bootable medium:
+qemu-system-i386 -kernel myos.bin
+
+在真实硬件上测试：
+Testing your operating system (Real Hardware)
+The program grub-mkrescue is nice because it makes a bootable ISO that works on both real
+computers and virtual machines. You can then build an ISO and use it everywhere. To boot
+your kernel on your local computer you can install myos.bin to your /boot directory and
+configure your bootloader appropriately.
+
+Or alternatively, you can burn it to an USB stick (erasing all data on it!).
+To do so, simply find out the name of the USB block device,
+in my case /dev/sdb but this may vary, and using the wrong block device (your harddisk, gasp!)
+may be disastrous. If you are using Linux and /dev/sdx is your block name, simply:
+sudo dd if=myos.iso of=/dev/sdx && sync
+
