@@ -1,6 +1,7 @@
 # You many now use double quotes around pathnames, in case
 # your pathname includes spaces.
 
+config_interface: textconfig
 display_library: sdl
 
 #=======================================================================
@@ -309,7 +310,7 @@ keyboard_paste_delay: 100000
 # 200Mhz Pentium with Linux 2.x                   approx 0.5 Mips
 #
 #=======================================================================
-cpu: count=1, ips=4000000
+cpu: count=1, ips=80000000
 
 #=======================================================================
 # mouse: Not used in any of the GUI specific modules, but the option
