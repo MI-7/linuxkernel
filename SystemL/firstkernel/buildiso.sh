@@ -1,1 +1,1 @@
-grub-mkrescue -o systeml.bin iso
+grub-mkrescue -o systeml.iso iso
