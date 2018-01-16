@@ -91,12 +91,69 @@ You can download the desired GCC release by visiting the GCC website (https://gn
 
 In addition, to build GCC you need to have installed GNU GMP, GNU MPFR, GNU Mpc and the ISL library. You may already have these libraries and the development files installed, but this tutorial builds them as part of GCC. If you don't need this, simply don't build them as part of GCC. Note that not all GMP, MPFR and Mpc combinations are compatible with a given GCC release. You also need Texinfo to build Binutils.
 - You can download GNU GMP from its website - http://gmplib.org/. (libgmp3-dev on apt-based systems, dev-libs/gmp on Gentoo, gmp-devel on Fedora, libgmp-devel on Cygwin)
+
 - You can download GNU MPFR from its website - http://mpfr.org/. (libmpfr-dev on apt-based systems, dev-libs/mpfr on Gentoo, mpfr-devel on Fedora, libmpfr-devel on Cygwin)
+
 - You can download ISL from its website (optional) - http://isl.gforge.inria.fr/. (libisl-dev on apt-based systems, libisl-devel on Cygwin)
+
 - You can download ClooG from its website (optional) - http://www.cloog.org/. (libcloog-isl-dev on apt-based systems, libcloog-isl-devel on Cygwin)
+
 - You can download GNU Mpc from its website - http://multiprecision.org/. (libmpc-dev on apt-based systems, dev-libs/mpc on Gentoo, libmpc-devel on Fedora, libmpc-devel on Cygwin)
+
 - You can download GNU Texinfo from its website - https://www.gnu.org/software/texinfo/. (texinfo on apt-based systems, texinfo on Arch Linux, sys-apps/texinfo on Gentoo, texinfo on Cygwin)
+
 - Download the needed source code into a suitable directory such as $HOME/src.
 
 An alternative way to download GMP, MPFR and Mpc is to go to the top level directory of the GCC source code (i.e. gcc-x.y.z/) and type the following:
         contrib/download_prerequisites
+这个的确好用，顺便把isl也下下来了。。。下载下来的压缩包就放在gcc5.4.0根目录下，而且自动解压缩
+
+================4================
+然后build代码
+export PREFIX="$HOME/opt/cross"
+export TARGET=i686-elf
+export PATH="$PREFIX/bin:$PATH"
+
+有几个选择，装到个人的目录，或者装到/usr/local给所有人用，或者干脆装到/usr下面覆盖system compiler。
+下面的步骤基于安装到个人目录的选项。
+
+编译binutils:
+cd $HOME/src
+mkdir build-binutils
+cd build-binutils
+../binutils-x.y.z/configure --target=$TARGET --prefix="$PREFIX" --with-sysroot --disable-nls --disable-werror
+make
+make install
+
+编译gcc:
+cd $HOME/src
+# The $PREFIX/bin dir _must_ be in the PATH. We did that above.
+which -- $TARGET-as || echo $TARGET-as is not in the PATH
+
+mkdir build-gcc
+cd build-gcc
+../gcc-x.y.z/configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-languages=c,c++ --without-headers
+make all-gcc
+make all-target-libgcc
+make install-gcc
+make install-target-libgcc
+
+
+
+================5================
+使用新的编译器
+现在做出来的编译器很简单，它还不能访问c语言库和c运行环境，所以你没办法使用任何标准的头文件或者创建可运行的二进制代码。但是它用来编译你的操作系统核心是足够了。
+
+你的compiler现在放在：
+$HOME/opt/cross/bin 下面，运行$TARGET-gcc --version:
+$HOME/opt/cross/bin/$TARGET-gcc --version
+可以得到版本：i686-elf-gcc
+
+你还不能用它来编译任何c语言程序，除了compiler自己生成的少数头文件外，你不能include任何东西。
+因为你还没有为你的操作系统传经标准库！！！
+
+C语言标准里面有两种运行环境：freestanding, hosted。你的操作系统核心属于freestanding，操作系统中的user space属于hosted。一个freestanding环境所需要提供的，是c library的一个子集：float.h, iso646.h, limits.h, stdalign.h, stdarg.h, stdbool.h, stddef.h, stdint.h and stdnoreturn.h (as of C11)
+
+只有typedef和define，而没有具体的c程序需要写。
+
+到这里cross compiler就制作完成了。

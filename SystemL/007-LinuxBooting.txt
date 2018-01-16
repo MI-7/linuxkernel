@@ -1,0 +1,17 @@
+https://www.ibm.com/developerworks/library/l-linuxboot/index.html
+
+$sudo dd if=/dev/sda1 of=mbr.bin bs=512 count=1
+1+0 records in
+1+0 records out
+512 bytes copied, .....s, ... MB/s
+
+$od -xa mbr.bin
+00000000    0000    0000    0000    0000    0000    0000    0000    0000
+        nul nul nul nul nul nul nul nul nul nul nul nul nul nul nul nul
+*
+0001000
+
+完全看不懂是什么...
+
+copy mbr:
+https://www.cyberciti.biz/faq/howto-copy-mbr/
