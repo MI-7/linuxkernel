@@ -56,7 +56,7 @@ size_t strlen(const char* str)
  
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
-static const size_t CACHE_SIZE = 80 * 25 * 3;
+#define CACHE_SIZE 80 * 25 * 3
  
 size_t terminal_row;
 size_t terminal_column;
