@@ -56,11 +56,20 @@ size_t strlen(const char* str)
  
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
+static const size_t CACHE_SIZE = 80 * 25 * 3;
  
 size_t terminal_row;
 size_t terminal_column;
 uint8_t terminal_color;
 uint16_t* terminal_buffer;
+typedef struct {
+  char c;
+  uint8_t color;
+  size_t x;
+  size_t y;
+} TERMINAL_CHAR;
+TERMINAL_CHAR terminal_cache[CACHE_SIZE];
+uint16_t total_char_in_cache = 0;
  
 void terminal_initialize(void) 
 {
@@ -75,7 +84,14 @@ void terminal_initialize(void)
 		}
 	}
 }
- 
+
+/* cache functions */
+void put_char_in_cache(char c, uint8_t color, size_t x, size_t y)
+{
+        
+}
+/* cache functions */
+
 void terminal_setcolor(uint8_t color) 
 {
 	terminal_color = color;
@@ -89,6 +105,9 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
  
 void terminal_putchar(char c) 
 {
+        /* put char in cache first */
+        put_char_in_cache(c, terminal_color, terminal_column, terminal_row);
+
 	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
 	if (++terminal_column == VGA_WIDTH) {
 		terminal_column = 0;
