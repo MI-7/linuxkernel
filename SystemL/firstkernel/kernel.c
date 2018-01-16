@@ -109,8 +109,8 @@ void put_char_in_cache(char c, uint8_t color, size_t x, size_t y)
 
 void load_cache_into_terminal_buffer()
 {
-	uint8_t start_row, end_row;
-	uint16_t i, index;
+	size_t start_row, end_row, index;
+	uint16_t i;
 
 	if (terminal_row < VGA_HEIGHT)
 	{
@@ -123,7 +123,7 @@ void load_cache_into_terminal_buffer()
 		end_row = terminal_row;
 	}
 
-	for (i = 0; i <= ch_in_cache; i++)
+	for (i = 0; i < ch_in_cache; i++)
 	{
 		if (terminal_cache[i].y >= start_row && terminal_cache[i].y <= end_row)
 		{
@@ -133,6 +133,20 @@ void load_cache_into_terminal_buffer()
 		
 		if (terminal_cache[i].y > end_row)
 			return;
+	}
+}
+
+void remove_first_line_from_cache()
+{
+	uint16_t to_be_removed = 0, i;
+	
+	while (terminal_cache[to_be_removed++].y == 0)
+		;
+
+	for (i = to_be_removed; i < ch_in_cache; i++)
+	{
+		terminal_cache[i].y--;
+		terminal_cache[i - to_be_removed] = terminal_cache[i];
 	}
 }
 /* cache functions */
@@ -176,11 +190,22 @@ void terminal_putchar(char c)
 		if (++terminal_column == VGA_WIDTH) {
 			terminal_column = 0;
 			if (terminal_row == VGA_HEIGHT * 3)
-				;
 				/* remove one line from cache */
+				remove_first_line_from_cache();
 			else
 				terminal_row ++;
 		}
+	}
+	else if (c_is_newline_character(c))
+	{
+		terminal_column = 0;
+		if (terminal_row == VGA_HEIGHT * 3)
+		{
+			/* remove one line from cache */
+			remove_first_line_from_cache();
+		}
+		else
+			terminal_row ++;
 	}
 }
  
@@ -208,6 +233,92 @@ void kernel_main(void)
 	terminal_initialize();
  
 	/* Newline support is left as an exercise. */
-	terminal_writestring("Hello, kernel World!");
-	terminal_writestring("Hello, kernel World!");
+	terminal_writestring("Hello, kernel World1!\n");
+	terminal_writestring("Hello, kernel World2!\n");
+	terminal_writestring("Hello, kernel World3!\n");
+	terminal_writestring("Hello, kernel World4!\n");
+	terminal_writestring("Hello, kernel World5!\n");
+	terminal_writestring("Hello, kernel World6!\n");
+	terminal_writestring("Hello, kernel World7!\n");
+	terminal_writestring("Hello, kernel World8!\n");
+	terminal_writestring("Hello, kernel World9!\n");
+	terminal_writestring("Hello, kernel World10!\n");
+	terminal_writestring("Hello, kernel World11!\n");
+	terminal_writestring("Hello, kernel World12!\n");
+	terminal_writestring("Hello, kernel World13!\n");
+	terminal_writestring("Hello, kernel World14!\n");
+	terminal_writestring("Hello, kernel World15!\n");
+	terminal_writestring("Hello, kernel World16!\n");
+	terminal_writestring("Hello, kernel World17!\n");
+	terminal_writestring("Hello, kernel World18!\n");
+	terminal_writestring("Hello, kernel World19!\n");
+	terminal_writestring("Hello, kernel World20!\n");
+	terminal_writestring("Hello, kernel World21!\n");
+	terminal_writestring("Hello, kernel World22!\n");
+	terminal_writestring("Hello, kernel World23!\n");
+	terminal_writestring("Hello, kernel World24!\n");
+	terminal_writestring("Hello, kernel World25!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26+!\n");
+	terminal_writestring("Hello, kernel World26++!\n");
+	terminal_writestring("Hello, kernel World26+++!\n");
+	terminal_writestring("Hello, kernel World26++++!\n");
+	terminal_writestring("Hello, kernel World26-!\n");
+	terminal_writestring("Hello, kernel World26--!\n");
+	terminal_writestring("Hello, kernel World26---!\n");
+	terminal_writestring("Hello, kernel World26----!\n");
+	terminal_writestring("Hello, kernel World26-----!\n");
+	terminal_writestring("Hello, kernel World26------!\n");
+	terminal_writestring("Hello, kernel World260!\n");
+	terminal_writestring("Hello, kernel World261!\n");
+	terminal_writestring("Hello, kernel World262!\n");
+	terminal_writestring("Hello, kernel World263!\n");
+	terminal_writestring("Hello, kernel World264!\n");
+	terminal_writestring("Hello, kernel World265!\n");
+	terminal_writestring("Hello, kernel World266!\n");
+        terminal_writestring("012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789");
 }
