@@ -1,46 +1,4 @@
-/* Surely you will remove the processor conditionals and this comment
-   appropriately depending on whether or not you use C++. */
-#if !defined(__cplusplus)
-#include <stdbool.h> /* C doesn't have booleans by default. */
-#endif
-#include <stddef.h>
-#include <stdint.h>
- 
-/* Check if the compiler thinks we are targeting the wrong operating system. */
-#if defined(__linux__)
-#error "You are not using a cross-compiler, you will most certainly run into trouble"
-#endif
- 
-/* This tutorial will only work for the 32-bit ix86 targets. */
-#if !defined(__i386__)
-#error "This tutorial needs to be compiled with a ix86-elf compiler"
-#endif
-
-/* character cache size */
-#define CACHE_SIZE 6000 /* 80 * 25 * 3 */
-
-#define true  1
-#define false 0
-
-/* Hardware text mode color constants. */
-enum vga_color {
-	VGA_COLOR_BLACK = 0,
-	VGA_COLOR_BLUE = 1,
-	VGA_COLOR_GREEN = 2,
-	VGA_COLOR_CYAN = 3,
-	VGA_COLOR_RED = 4,
-	VGA_COLOR_MAGENTA = 5,
-	VGA_COLOR_BROWN = 6,
-	VGA_COLOR_LIGHT_GREY = 7,
-	VGA_COLOR_DARK_GREY = 8,
-	VGA_COLOR_LIGHT_BLUE = 9,
-	VGA_COLOR_LIGHT_GREEN = 10,
-	VGA_COLOR_LIGHT_CYAN = 11,
-	VGA_COLOR_LIGHT_RED = 12,
-	VGA_COLOR_LIGHT_MAGENTA = 13,
-	VGA_COLOR_LIGHT_BROWN = 14,
-	VGA_COLOR_WHITE = 15,
-};
+#include "kernel.h"
 
 /* screen size */
 static const size_t VGA_WIDTH = 80;
@@ -87,7 +45,7 @@ void terminal_initialize(void)
 
 	terminal_row = 0;
 	terminal_column = 0;
-	terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+	terminal_color = vga_entry_color(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
 	terminal_buffer = (uint16_t*) 0xB8000;
 	for (size_t y = 0; y < VGA_HEIGHT; y++) {
 		for (size_t x = 0; x < VGA_WIDTH; x++) {
@@ -101,7 +59,8 @@ void terminal_initialize(void)
 void put_char_in_cache(char c, uint8_t color, size_t x, size_t y)
 {
         terminal_cache[ch_in_cache].c = c;
-	terminal_cache[ch_in_cache].color = color;
+	/* terminal_cache[ch_in_cache].color = color; */
+	terminal_cache[ch_in_cache].color = vga_entry_color((x+y) % 15, VGA_COLOR_BLACK);
 	terminal_cache[ch_in_cache].x = x;
 	terminal_cache[ch_in_cache].y = y;
 	ch_in_cache ++;
@@ -123,6 +82,14 @@ void load_cache_into_terminal_buffer()
 		end_row = terminal_row;
 	}
 
+	/* initialize / clear the terminal buffer */
+	for (size_t y = 0; y < VGA_HEIGHT; y++) {
+		for (size_t x = 0; x < VGA_WIDTH; x++) {
+			const size_t index = y * VGA_WIDTH + x;
+			terminal_buffer[index] = vga_entry(' ', terminal_color);
+		}
+	}
+
 	for (i = 0; i < ch_in_cache; i++)
 	{
 		if (terminal_cache[i].y >= start_row && terminal_cache[i].y <= end_row)
@@ -140,14 +107,16 @@ void remove_first_line_from_cache()
 {
 	uint16_t to_be_removed = 0, i;
 	
-	while (terminal_cache[to_be_removed++].y == 0)
-		;
+	while (terminal_cache[to_be_removed].y == 0)
+		to_be_removed++;
 
 	for (i = to_be_removed; i < ch_in_cache; i++)
 	{
 		terminal_cache[i].y--;
 		terminal_cache[i - to_be_removed] = terminal_cache[i];
 	}
+
+	ch_in_cache = ch_in_cache - to_be_removed;
 }
 /* cache functions */
 
@@ -189,7 +158,7 @@ void terminal_putchar(char c)
 		/* terminal_putentryat(c, terminal_color, terminal_column, terminal_row); */
 		if (++terminal_column == VGA_WIDTH) {
 			terminal_column = 0;
-			if (terminal_row == VGA_HEIGHT * 3)
+			if (terminal_row == VGA_HEIGHT * 3 - 1)
 				/* remove one line from cache */
 				remove_first_line_from_cache();
 			else
@@ -199,7 +168,7 @@ void terminal_putchar(char c)
 	else if (c_is_newline_character(c))
 	{
 		terminal_column = 0;
-		if (terminal_row == VGA_HEIGHT * 3)
+		if (terminal_row == VGA_HEIGHT * 3 - 1)
 		{
 			/* remove one line from cache */
 			remove_first_line_from_cache();
@@ -219,11 +188,8 @@ void terminal_write(const char* data, size_t size)
 void terminal_writestring(const char* data) 
 {
 	terminal_write(data, strlen(data));
-	
-	/* transfer cache into terminal buffer */
-	load_cache_into_terminal_buffer();
 }
- 
+
 #if defined(__cplusplus)
 extern "C" /* Use C linkage for kernel_main. */
 #endif
@@ -287,13 +253,7 @@ void kernel_main(void)
 	terminal_writestring("Hello, kernel World26!\n");
 	terminal_writestring("Hello, kernel World26!\n");
 	terminal_writestring("Hello, kernel World26!\n");
-	terminal_writestring("Hello, kernel World26!\n");
-	terminal_writestring("Hello, kernel World26!\n");
-	terminal_writestring("Hello, kernel World26!\n");
-	terminal_writestring("Hello, kernel World26!\n");
-	terminal_writestring("Hello, kernel World26!\n");
-	terminal_writestring("Hello, kernel World26!\n");
-	terminal_writestring("Hello, kernel World26!\n");
+	terminal_writestring("Hello, kernel World26!!\n");
 	terminal_writestring("Hello, kernel World26!\n");
 	terminal_writestring("Hello, kernel World26!\n");
 	terminal_writestring("Hello, kernel World26!\n");
@@ -314,11 +274,8 @@ void kernel_main(void)
 	terminal_writestring("Hello, kernel World26-----!\n");
 	terminal_writestring("Hello, kernel World26------!\n");
 	terminal_writestring("Hello, kernel World260!\n");
-	terminal_writestring("Hello, kernel World261!\n");
-	terminal_writestring("Hello, kernel World262!\n");
-	terminal_writestring("Hello, kernel World263!\n");
-	terminal_writestring("Hello, kernel World264!\n");
-	terminal_writestring("Hello, kernel World265!\n");
-	terminal_writestring("Hello, kernel World266!\n");
-        terminal_writestring("012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789");
+	terminal_writestring("Hello, kernel World260!!");
+        /*terminal_writestring("012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789");*/
+	/* transfer cache into terminal buffer */
+	load_cache_into_terminal_buffer();
 }
