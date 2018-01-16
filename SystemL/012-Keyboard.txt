@@ -1,0 +1,49 @@
+首先是中断
+http://wiki.osdev.org/Interrupt_Service_Routines
+x86 = an interrupt driven system
+
+external events trigger interrupt -> an ISR (Interrupt Service Routine) is called
+
+e.g.
+- press a key
+- keyboard triggers IRQ1
+- interrupt handler is called
+
+========我觉得我要做的就是这个interrupt handler，但是不知道要怎么写，用汇编还是c========
+cpu得知道这个interrupt handler在哪里，该怎么调用，应该是从IDT的终端向量表中获取，看看下面的描述：
+For the system to know which interrupt service routine to call when a certain interrupt occurs, offsets to the ISRs are stored in the Interrupt Descriptor Table when you're in Protected mode, or in the Interrupt Vector Table when you're in Real Mode.
+
+An ISR is called directly by the CPU, and the protocol for calling an ISR differs from calling e.g. a C function. Most importantly, an ISR has to end with the iret opcode, whereas usual C functions end with ret or retf.
+
+========所以有三个东西要研究：IDT，ISR，ISR calling protocol========
+
+
+中断：http://wiki.osdev.org/Interrupts
+========那么要怎么写这些程序呢？========
+Step by step, now that you've grabbed the whole thing and know what's to be done:
+* Make space for the interrupt descriptor table
+* Tell the CPU where that space is (see GDT Tutorial: lidt works the very same way as lgdt)
+* Tell the PIC that you no longer want to use the BIOS defaults (see Programming the PIC chips)
+* Write a couple of ISR handlers (see Interrupt Service Routines) for both IRQs and exceptions
+* Put the addresses of the ISR handlers in the appropriate descriptors (in Interrupt Descriptor Table)
+* Enable all supported interrupts in the IRQ mask (of the PIC)
+
+
+========GDT Guide: http://wiki.osdev.org/GDT_Tutorial========
+一些名词：
+Segment（内存段）
+	a logically contiguous chunk of memory with consistent properties (CPU's speaking)
+
+Segment Register（段寄存器）
+	a register of your CPU that refers to a segment for a special use (e.g. SS, CS, DS ...)
+
+Selector（选择符？）
+	a reference to a descriptor you can load into a segment register; the selector is an offset of a descriptor table entry. These entries are 8 bytes long. Therefore, bits 3 and up only declare the descriptor table entry offset, while bit 2 specifies if this selector is a GDT or LDT selector (LDT - bit set, GDT - bit cleared), and bits 0 - 1 declare the ring level that needs to correspond to the descriptor table entry's DPL field. If it doesn't, a General Protection Fault occurs; if it does correspond then the CPL level of the selector used changed accordingly.
+
+Descriptor（描述符？）
+	a memory structure (part of a table) that tells the CPU the attributes of a given segment
+
+========GDT Guide: 我该在GDT里面放点什么？========
+
+IDT: http://wiki.osdev.org/IDT
+GDT: http://wiki.osdev.org/Global_Descriptor_Table
