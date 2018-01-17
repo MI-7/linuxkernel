@@ -35,4 +35,20 @@ void PIC_remap(int offset1, int offset2);
 
 void PIC_sendEOI(unsigned char irq);
 
+#define PIC1_CMD                    0x20
+#define PIC1_DATA                   0x21
+#define PIC2_CMD                    0xA0
+#define PIC2_DATA                   0xA1
+#define PIC_READ_IRR                0x0a    /* OCW3 irq ready next CMD read */
+#define PIC_READ_ISR                0x0b    /* OCW3 irq service next CMD read */
+ 
+/* Helper func */
+static uint16_t __pic_get_irq_reg(int ocw3);
+ 
+/* Returns the combined value of the cascaded PICs irq request register */
+uint16_t pic_get_irr(void);
+ 
+/* Returns the combined value of the cascaded PICs in-service register */
+uint16_t pic_get_isr(void);
+
 #endif
