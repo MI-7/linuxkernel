@@ -2,6 +2,12 @@
 #include "io.h"
 #include "terminal.h"
 
+struct interrupt_frame;
+
+__attribute__((interrupt)) void keyboard_interrupt_handler(struct interrupt_frame *frame)
+{
+}
+
 void irq_set_mask(unsigned char IRQline)
 {
     uint16_t port;
@@ -14,7 +20,7 @@ void irq_set_mask(unsigned char IRQline)
         IRQline -= 8;
     }
     value = inb(port) | (1 << IRQline);
-    outb(port, value);        
+    outb(port, value);
 }
 
 void irq_clear_mask(unsigned char IRQline)
