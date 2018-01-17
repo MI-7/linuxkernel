@@ -43,7 +43,30 @@ Selector（选择符？）
 Descriptor（描述符？）
 	a memory structure (part of a table) that tells the CPU the attributes of a given segment
 
+========GDT Guide: GDT的存在========
+in protected mode, most of the memory management and Interrupt Service Routines are controlled through tables of descriptors. Each descriptor stores information about a single object (e.g. a service routine, a task, a chunk of code or data, whatever) the CPU might need at some time. If you try, for instance, to load a new value into a segment register, the CPU needs to perform safety and access control checks to see whether you're actually entitled to access that specific memory area. Once the checks are performed, useful values (such as the lowest and highest addresses) are cached in invisible registers of the CPU.
+
+Intel defined 3 types of tables: the Interrupt Descriptor Table (which supplants the IVT), the Global Descriptor Table (GDT) and the Local Descriptor Table. Each table is defined as a (size, linear address) to the CPU through the LIDT, LGDT, LLDT instructions respectively. In most cases, the OS simply tells where those tables are once at boot time, and then simply goes writing/reading the tables through a pointer.
+
 ========GDT Guide: 我该在GDT里面放点什么？========
+最基本的项目：
+* The null descriptor which is never referenced by the processor. Certain emulators, like Bochs, will complain about limit exceptions if you do not have one present. Some use this descriptor to store a pointer to the GDT itself (to use with the LGDT instruction). The null descriptor is 8 bytes wide and the pointer is 6 bytes wide so it might just be the perfect place for this.
+* A code segment descriptor (for your kernel, it should have type=0x9A)
+* A data segment descriptor (you can't write to a code segment, so add this with type=0x92)
+* A TSS segment descriptor (trust me, keep a place for at least one)
+* Room for more segments if you need them (e.g. user-level, LDTs, more TSS, whatever)
+Sysenter/Sysexit
+If you are using the Intel SYSENTER/SYSEXIT routines, the GDT must be structured like this:
+Any descriptors preceding (null descriptor, special kernel stuff, etc.)
+* A DPL 0 code segment descriptor (the one that SYSENTER will use)
+* A DPL 0 data segment descriptor (for the SYSENTER stack)
+* A DPL 3 code segment (for the code after SYSEXIT)
+* A DPL 3 data segment (for the user-mode stack after SYSEXIT)
+* Any other descriptors
+See the Intel Instruction Reference for SYSENTER and SYSEXIT for more information.
+
+
+
 
 IDT: http://wiki.osdev.org/IDT
 GDT: http://wiki.osdev.org/Global_Descriptor_Table
