@@ -24,8 +24,8 @@ void gdt_initialize()
 	gdt_create_entries(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
 	gdt_create_entries(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
 
-	print_something();
-
 	/* defined in gdt.s */
 	_gdt_flush();
+
+	print_something("gdt initialized\n");
 }

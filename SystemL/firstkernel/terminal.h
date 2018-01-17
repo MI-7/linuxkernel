@@ -57,6 +57,6 @@ void terminal_writestring(const char* data);
 
 void terminal_initialize(void);
 
-void print_something(void);
+void print_something(const char* data);
 /* terminal functions */
 #endif

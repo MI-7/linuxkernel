@@ -1,5 +1,6 @@
 #include "interrupt.h"
 #include "io.h"
+#include "terminal.h"
 
 void pic_send_eoi(unsigned char irq)
 {
@@ -64,4 +65,6 @@ void pic_initialize(void)
 {
 	/* master offset = 0x20; slave offset = 0x28 */
 	pic_remap(0x20, 0x28);
+
+	print_something("pic initialized\n");
 }

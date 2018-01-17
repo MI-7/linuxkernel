@@ -183,8 +183,8 @@ void terminal_writestring(const char* data)
 	terminal_write(data, strlen(data));
 }
 
-void print_something(void)
+void print_something(const char* data)
 {
-	terminal_writestring("\nsomething\n");
+	terminal_writestring(data);
 	load_cache_into_terminal_buffer();
 }
