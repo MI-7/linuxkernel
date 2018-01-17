@@ -56,4 +56,10 @@ uint16_t pic_get_isr(void);
 
 void pic_initialize(void);
 
+/* set irq mask */
+void irq_set_mask(unsigned char IRQline);
+
+/* clear ire mask */
+void irq_clear_mask(unsigned char IRQline);
+
 #endif
