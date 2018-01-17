@@ -1,6 +1,9 @@
 #ifndef INTERRUPT_H
 #define INTERRUPT_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 #define PIC1		0x20		/* IO base address for master PIC */
 #define PIC2		0xA0		/* IO base address for slave PIC */
 #define PIC1_COMMAND	PIC1
@@ -36,9 +39,9 @@ void PIC_remap(int offset1, int offset2);
 void PIC_sendEOI(unsigned char irq);
 
 #define PIC1_CMD                    0x20
-#define PIC1_DATA                   0x21
+/* #define PIC1_DATA                   0x21 it is defined above */
 #define PIC2_CMD                    0xA0
-#define PIC2_DATA                   0xA1
+/* #define PIC2_DATA                   0xA1 it is defined above */
 #define PIC_READ_IRR                0x0a    /* OCW3 irq ready next CMD read */
 #define PIC_READ_ISR                0x0b    /* OCW3 irq service next CMD read */
  

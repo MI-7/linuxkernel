@@ -1,6 +1,9 @@
 #ifndef IO_H
 #define IO_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 /*
 Sends a 8/16/32-bit value on a I/O location. Traditional names are outb, outw and outl respectively. The a modifier enforces val to be placed in the eax register before the asm command is issued and Nd allows for one-byte constant values to be assembled as constants, freeing the edx register for other cases.
 */

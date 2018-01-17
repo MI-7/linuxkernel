@@ -1,4 +1,5 @@
 #include "interrupt.h"
+#include "io.h"
 
 void PIC_sendEOI(unsigned char irq)
 {
