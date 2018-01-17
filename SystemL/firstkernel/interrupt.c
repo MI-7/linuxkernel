@@ -1,7 +1,7 @@
 #include "interrupt.h"
 #include "io.h"
 
-void PIC_sendEOI(unsigned char irq)
+void pic_send_eoi(unsigned char irq)
 {
 	if(irq >= 8)
 		outb(PIC2_COMMAND,PIC_EOI);
@@ -9,7 +9,7 @@ void PIC_sendEOI(unsigned char irq)
 	outb(PIC1_COMMAND,PIC_EOI);
 }
 
-void PIC_remap(int offset1, int offset2)
+void pic_remap(int offset1, int offset2)
 {
 	unsigned char a1, a2;
  
@@ -39,7 +39,7 @@ void PIC_remap(int offset1, int offset2)
 }
 
 /* Helper func */
-static uint16_t __pic_get_irq_reg(int ocw3)
+uint16_t __pic_get_irq_reg(int ocw3)
 {
     /* OCW3 to PIC CMD to get the register values.  PIC2 is chained, and
      * represents IRQs 8-15.  PIC1 is IRQs 0-7, with 2 being the chain */
@@ -58,4 +58,10 @@ uint16_t pic_get_irr(void)
 uint16_t pic_get_isr(void)
 {
     return __pic_get_irq_reg(PIC_READ_ISR);
+}
+
+void pic_initialize(void)
+{
+	/* master offset = 0x20; slave offset = 0x28 */
+	pic_remap(0x20, 0x28);
 }

@@ -2,6 +2,7 @@
 #include "terminal.h"
 #include "gdt.h"
 #include "test.h"
+#include "interrupt.h"
 
 #if defined(__cplusplus)
 extern "C" /* Use C linkage for kernel_main. */
@@ -15,6 +16,9 @@ void kernel_main(void)
 
 	/* Initialize GDT entries */
 	gdt_initialize();
+
+	/* re-map pic vectors */
+	pic_initialize();
 
 	/* test_terminal_output(); */
 }

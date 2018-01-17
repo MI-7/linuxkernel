@@ -34,9 +34,9 @@ arguments:
 		vectors on the master become offset1..offset1+7
 	offset2 - same for slave PIC: offset2..offset2+7
 */
-void PIC_remap(int offset1, int offset2);
+void pic_remap(int offset1, int offset2);
 
-void PIC_sendEOI(unsigned char irq);
+void pic_send_eoi(unsigned char irq);
 
 #define PIC1_CMD                    0x20
 /* #define PIC1_DATA                   0x21 it is defined above */
@@ -46,12 +46,14 @@ void PIC_sendEOI(unsigned char irq);
 #define PIC_READ_ISR                0x0b    /* OCW3 irq service next CMD read */
  
 /* Helper func */
-static uint16_t __pic_get_irq_reg(int ocw3);
+uint16_t __pic_get_irq_reg(int ocw3);
  
 /* Returns the combined value of the cascaded PICs irq request register */
 uint16_t pic_get_irr(void);
  
 /* Returns the combined value of the cascaded PICs in-service register */
 uint16_t pic_get_isr(void);
+
+void pic_initialize(void);
 
 #endif
