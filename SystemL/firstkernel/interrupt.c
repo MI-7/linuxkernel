@@ -2,11 +2,13 @@
 #include "io.h"
 #include "terminal.h"
 
+/* gives warning: interrupt attribute ignored
 struct interrupt_frame;
 
 __attribute__((interrupt)) void keyboard_interrupt_handler(struct interrupt_frame *frame)
 {
 }
+*/
 
 void irq_set_mask(unsigned char IRQline)
 {

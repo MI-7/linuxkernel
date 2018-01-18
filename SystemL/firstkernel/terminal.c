@@ -53,7 +53,8 @@ void put_char_in_cache(char c, uint8_t color, size_t x, size_t y)
 {
         terminal_cache[ch_in_cache].c = c;
 	/* terminal_cache[ch_in_cache].color = color; */
-	terminal_cache[ch_in_cache].color = vga_entry_color((x+y) % 15, VGA_COLOR_BLACK);
+	/* no black front color */
+	terminal_cache[ch_in_cache].color = vga_entry_color((x+y) % 14 + 1, VGA_COLOR_BLACK);
 	terminal_cache[ch_in_cache].x = x;
 	terminal_cache[ch_in_cache].y = y;
 	ch_in_cache ++;
