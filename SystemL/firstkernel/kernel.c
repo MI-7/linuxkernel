@@ -4,6 +4,7 @@
 #include "test.h"
 #include "interrupt.h"
 #include "idt.h"
+#include "isr.h"
 
 #if defined(__cplusplus)
 extern "C" /* Use C linkage for kernel_main. */
@@ -23,6 +24,9 @@ void kernel_main(void)
 
 	/* initialize IDT entries */
 	idt_initialize();
+
+	/* create entries for ISR for exceptions */
+	isrs_initialize();
 
 	/* test_terminal_output(); */
 }

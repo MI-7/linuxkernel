@@ -1,4 +1,49 @@
 #include "isr.h"
+#include "idt.h"
+#include "terminal.h"
+
+/* This is a simple string array. It contains the message that
+*  corresponds to each and every exception. We get the correct
+*  message by accessing like:
+*  exception_message[interrupt_number] */
+char *exception_messages[] =
+{
+    "Division By Zero",
+    "Debug",
+    "Non Maskable Interrupt",
+    "Breakpoint",
+    "Into Detected Overflow",
+    "Out of Bounds",
+    "Invalid Opcode",
+    "No Coprocessor",
+
+    "Double Fault",
+    "Coprocessor Segment Overrun",
+    "Bad TSS",
+    "Segment Not Present",
+    "Stack Fault",
+    "General Protection Fault",
+    "Page Fault",
+    "Unknown Interrupt",
+
+    "Coprocessor Fault",
+    "Alignment Check",
+    "Machine Check",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved"
+};
 
 /* This is a very repetitive function... it's not hard, it's
 *  just annoying. As you can see, we set the first 32 entries
@@ -11,41 +56,43 @@
 *  hex. */
 void isrs_initialize()
 {
-    idt_set_gate(0, (unsigned)isr0, 0x08, 0x8E);
-    idt_set_gate(1, (unsigned)isr1, 0x08, 0x8E);
-    idt_set_gate(2, (unsigned)isr2, 0x08, 0x8E);
-    idt_set_gate(3, (unsigned)isr3, 0x08, 0x8E);
-    idt_set_gate(4, (unsigned)isr4, 0x08, 0x8E);
-    idt_set_gate(5, (unsigned)isr5, 0x08, 0x8E);
-    idt_set_gate(6, (unsigned)isr6, 0x08, 0x8E);
-    idt_set_gate(7, (unsigned)isr7, 0x08, 0x8E);
+    idt_create_entry(0, (unsigned)_isr0, 0x08, 0x8E);
+    idt_create_entry(1, (unsigned)_isr1, 0x08, 0x8E);
+    idt_create_entry(2, (unsigned)_isr2, 0x08, 0x8E);
+    idt_create_entry(3, (unsigned)_isr3, 0x08, 0x8E);
+    idt_create_entry(4, (unsigned)_isr4, 0x08, 0x8E);
+    idt_create_entry(5, (unsigned)_isr5, 0x08, 0x8E);
+    idt_create_entry(6, (unsigned)_isr6, 0x08, 0x8E);
+    idt_create_entry(7, (unsigned)_isr7, 0x08, 0x8E);
 
-    idt_set_gate(8, (unsigned)isr8, 0x08, 0x8E);
-    idt_set_gate(9, (unsigned)isr9, 0x08, 0x8E);
-    idt_set_gate(10, (unsigned)isr10, 0x08, 0x8E);
-    idt_set_gate(11, (unsigned)isr11, 0x08, 0x8E);
-    idt_set_gate(12, (unsigned)isr12, 0x08, 0x8E);
-    idt_set_gate(13, (unsigned)isr13, 0x08, 0x8E);
-    idt_set_gate(14, (unsigned)isr14, 0x08, 0x8E);
-    idt_set_gate(15, (unsigned)isr15, 0x08, 0x8E);
+    idt_create_entry(8, (unsigned)_isr8, 0x08, 0x8E);
+    idt_create_entry(9, (unsigned)_isr9, 0x08, 0x8E);
+    idt_create_entry(10, (unsigned)_isr10, 0x08, 0x8E);
+    idt_create_entry(11, (unsigned)_isr11, 0x08, 0x8E);
+    idt_create_entry(12, (unsigned)_isr12, 0x08, 0x8E);
+    idt_create_entry(13, (unsigned)_isr13, 0x08, 0x8E);
+    idt_create_entry(14, (unsigned)_isr14, 0x08, 0x8E);
+    idt_create_entry(15, (unsigned)_isr15, 0x08, 0x8E);
 
-    idt_set_gate(16, (unsigned)isr16, 0x08, 0x8E);
-    idt_set_gate(17, (unsigned)isr17, 0x08, 0x8E);
-    idt_set_gate(18, (unsigned)isr18, 0x08, 0x8E);
-    idt_set_gate(19, (unsigned)isr19, 0x08, 0x8E);
-    idt_set_gate(20, (unsigned)isr20, 0x08, 0x8E);
-    idt_set_gate(21, (unsigned)isr21, 0x08, 0x8E);
-    idt_set_gate(22, (unsigned)isr22, 0x08, 0x8E);
-    idt_set_gate(23, (unsigned)isr23, 0x08, 0x8E);
+    idt_create_entry(16, (unsigned)_isr16, 0x08, 0x8E);
+    idt_create_entry(17, (unsigned)_isr17, 0x08, 0x8E);
+    idt_create_entry(18, (unsigned)_isr18, 0x08, 0x8E);
+    idt_create_entry(19, (unsigned)_isr19, 0x08, 0x8E);
+    idt_create_entry(20, (unsigned)_isr20, 0x08, 0x8E);
+    idt_create_entry(21, (unsigned)_isr21, 0x08, 0x8E);
+    idt_create_entry(22, (unsigned)_isr22, 0x08, 0x8E);
+    idt_create_entry(23, (unsigned)_isr23, 0x08, 0x8E);
 
-    idt_set_gate(24, (unsigned)isr24, 0x08, 0x8E);
-    idt_set_gate(25, (unsigned)isr25, 0x08, 0x8E);
-    idt_set_gate(26, (unsigned)isr26, 0x08, 0x8E);
-    idt_set_gate(27, (unsigned)isr27, 0x08, 0x8E);
-    idt_set_gate(28, (unsigned)isr28, 0x08, 0x8E);
-    idt_set_gate(29, (unsigned)isr29, 0x08, 0x8E);
-    idt_set_gate(30, (unsigned)isr30, 0x08, 0x8E);
-    idt_set_gate(31, (unsigned)isr31, 0x08, 0x8E);
+    idt_create_entry(24, (unsigned)_isr24, 0x08, 0x8E);
+    idt_create_entry(25, (unsigned)_isr25, 0x08, 0x8E);
+    idt_create_entry(26, (unsigned)_isr26, 0x08, 0x8E);
+    idt_create_entry(27, (unsigned)_isr27, 0x08, 0x8E);
+    idt_create_entry(28, (unsigned)_isr28, 0x08, 0x8E);
+    idt_create_entry(29, (unsigned)_isr29, 0x08, 0x8E);
+    idt_create_entry(30, (unsigned)_isr30, 0x08, 0x8E);
+    idt_create_entry(31, (unsigned)_isr31, 0x08, 0x8E);
+
+    print_something("exception isr initialized\n");
 }
 
 /* All of our Exception handling Interrupt Service Routines will
