@@ -11,4 +11,12 @@
 #error "This tutorial needs to be compiled with a ix86-elf compiler"
 #endif
 
+#include "terminal.h"
+#include "gdt.h"
+#include "test.h"
+#include "interrupt.h"
+#include "idt.h"
+#include "isr.h"
+#include "irq.h"
+
 #endif

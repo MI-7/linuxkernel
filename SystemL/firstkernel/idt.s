@@ -1,5 +1,6 @@
 .intel_syntax noprefix
 
+.section .text
 .global idt_load
 .extern idt_ptr
 

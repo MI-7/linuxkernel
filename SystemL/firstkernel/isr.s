@@ -1,4 +1,7 @@
 .intel_syntax noprefix
+
+
+.section .text
 .global _isr0
 .global _isr1
 .global _isr2

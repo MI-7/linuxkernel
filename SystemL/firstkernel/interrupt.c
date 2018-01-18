@@ -102,7 +102,7 @@ uint16_t pic_get_isr(void)
 void pic_initialize(void)
 {
 	/* master offset = 0x20; slave offset = 0x28 */
-	pic_remap(0x20, 0x28);
+	/* pic_remap(0x20, 0x28); */
 
 	print_something("pic initialized\n");
 }

@@ -1,5 +1,6 @@
 .intel_syntax noprefix
 
+.section .text
 .global _gdt_flush
 .extern gdt_ptr
 
