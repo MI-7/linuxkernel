@@ -1,4 +1,6 @@
 .intel_syntax noprefix
+
+.section .text
 .global _irq0
 .global _irq1
 .global _irq2
@@ -131,8 +133,8 @@ _irq15:
  that 'fault_handler' exists in another file */
 .extern irq_handler
 
-/* This is our common ISR stub. It saves the processor state, sets
- up for kernel mode segments, calls the C-level fault handler,
+/* This is our common IRQ stub. It saves the processor state, sets
+ up for kernel mode segments, calls the C-level irq handler,
  and finally restores the stack frame. */
 irq_common_stub:
     pusha
@@ -157,3 +159,4 @@ irq_common_stub:
     popa
     add esp, 8
     iret
+
