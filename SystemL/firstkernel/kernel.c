@@ -20,10 +20,10 @@ void kernel_main(void)
 	idt_initialize();
 
 	/* create entries for ISR for exceptions */
-	isrs_initialize();
+	/* isrs_initialize(); moved into idt_initialize() */
 
 	/* create irq handlers */
-	irq_initialize();
+	/* irq_initialize(); moved into idt_initialize() */
 
 	test_terminal_output();
 

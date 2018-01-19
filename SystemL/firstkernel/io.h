@@ -31,12 +31,20 @@ static inline uint8_t inb(uint16_t port)
 /*
 Forces the CPU to wait for an I/O operation to complete. only use this when there's nothing like a status register or an IRQ to tell you the info has been received.
 */
+/*
 static inline void io_wait(void)
 {
-    /* TODO: This is probably fragile. */
+    TODO: This is probably fragile.
     asm volatile ( "jmp 1f\n\t"
                    "1:jmp 2f\n\t"
                    "2:" );
+}
+*/
+
+/* trying another version of io_wait */
+static inline void io_wait(void)
+{
+    asm volatile( "outb %%al, $0x80" : : "a"(0) );
 }
 
 #endif

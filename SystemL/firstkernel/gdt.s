@@ -2,7 +2,7 @@
 
 .section .text
 .global _gdt_flush
-.extern _gdt_ptr
+.extern gdt_ptr
 
 _gdt_flush:
 	lgdt [gdt_ptr]
