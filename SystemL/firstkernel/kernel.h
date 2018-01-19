@@ -16,7 +16,5 @@
 #include "test.h"
 #include "interrupt.h"
 #include "idt.h"
-#include "isr.h"
-#include "irq.h"
 
 #endif

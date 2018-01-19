@@ -4,12 +4,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-struct regs {
-	uint32_t gs, fs, es, ds;
-	uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
-	uint32_t int_no, err_code;
-	uint32_t eip, cs, eflags, useresp, ss;
-};
 
 struct IDT_PTR {
 	uint16_t limit;
@@ -24,7 +18,7 @@ struct IDT {
 	uint16_t offset_2;  /* base high */
 } __attribute__((packed));
 
-void idt_create_entry(uint8_t entry_num, uint32_t base, uint16_t sel, uint8_t flags);
+void idt_create_entry(uint8_t entry_num, void* base, uint16_t sel, uint8_t flags);
 void idt_initialize(void);
 
 /* defined in idt.s */
@@ -32,6 +26,7 @@ extern void idt_load();
 
 /* These are own ISRs that point to our special IRQ handler
 *  instead of the regular 'fault_handler' function */
+extern void int_general();
 extern void _irq0();
 extern void _irq1();
 extern void _irq2();
@@ -50,7 +45,7 @@ extern void _irq14();
 extern void _irq15();
 
 /* This installs a custom IRQ handler for the given IRQ */
-void irq_install_handler(int irq, void (*handler)(struct regs *r));
+void irq_install_handler(int irq, void (*handler)());
 
 /* This clears the handler for a given IRQ */
 void irq_uninstall_handler(int irq);
@@ -80,7 +75,9 @@ void irq_initialize();
 *  interrupt at BOTH controllers, otherwise, you only send
 *  an EOI command to the first controller. If you don't send
 *  an EOI, you won't raise any more IRQs */
-void irq_handler(struct regs *r);
+void low_irq_handler();
+void high_irq_handler();
+void keyboard_handler();
 
 
 extern void _isr0();
@@ -133,7 +130,7 @@ void isrs_initialize();
 *  endless loop. All ISRs disable interrupts while they are being
 *  serviced as a 'locking' mechanism to prevent an IRQ from
 *  happening and messing up kernel data structures */
-void fault_handler(struct regs *r);
+void fault_handler();
 
 
 

@@ -110,16 +110,19 @@ unsigned int remappic()
 	outb(0x21, 0x20);		// Map the first 8 interrupts to 0x20
 	outb(0xA1, 0x28);		// Map 8 - 15 interrupts to 0x28
 
-	outb(0x21, 0x04);		// Tell the pic how its connected 
-	outb(0xA1, 0x02);		
+	/*outb(0x21, 0x04);		// Tell the pic how its connected 
+	outb(0xA1, 0x02);*/
+	outb(0x21, 0x00);
+	outb(0x21, 0x00);		
 	
 	outb(0x21, 0x01);		// Tell the mode it is operating in
 	outb(0xA1, 0x01);
 
-	outb(0x21, 0xfd);
+	/* outb(0x21, 0xfd); not sure why */
+	outb(0x21, 0xff);
 	outb(0xA1, 0xff);
 
-  return 0;
+	return 0;
 }
 
 
@@ -149,8 +152,8 @@ uint16_t pic_get_isr(void)
 void pic_initialize(void)
 {
 	/* master offset = 0x20; slave offset = 0x28 */
-	/* pic_remap(0x20, 0x28); */
-	remappic();
+	pic_remap(0x20, 0x28);
+	/* remappic(); */
 
 	print_something("pic initialized\n");
 }

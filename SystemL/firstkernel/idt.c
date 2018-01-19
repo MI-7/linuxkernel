@@ -1,5 +1,6 @@
 #include "idt.h"
 #include "terminal.h"
+#include "io.h"
 
 struct IDT idt[256];
 struct IDT_PTR idt_ptr;
@@ -11,10 +12,12 @@ struct IDT_PTR idt_ptr;
 	uint8_t  type_attr;
 	uint16_t offset_2;
 */
-void idt_create_entry(uint8_t entry_num, uint32_t base, uint16_t sel, uint8_t flags)
+void idt_create_entry(uint8_t entry_num, void* base, uint16_t sel, uint8_t flags)
 {
-	idt[entry_num].offset_1 = base & 0xFFFF;
-	idt[entry_num].offset_2 = (base >> 16) & 0xFFFF;
+	uint32_t baseinteger = (uint32_t) base;
+
+	idt[entry_num].offset_1 = baseinteger & 0xFFFF;
+	idt[entry_num].offset_2 = (baseinteger >> 16) & 0xFFFF;
 
 	idt[entry_num].selector = sel;
 	idt[entry_num].zero = 0;
@@ -76,41 +79,41 @@ char *exception_messages[] =
 *  hex. */
 void isrs_initialize()
 {
-    idt_create_entry(0, (unsigned)_isr0, 0x08, 0x8E);
-    idt_create_entry(1, (unsigned)_isr1, 0x08, 0x8E);
-    idt_create_entry(2, (unsigned)_isr2, 0x08, 0x8E);
-    idt_create_entry(3, (unsigned)_isr3, 0x08, 0x8E);
-    idt_create_entry(4, (unsigned)_isr4, 0x08, 0x8E);
-    idt_create_entry(5, (unsigned)_isr5, 0x08, 0x8E);
-    idt_create_entry(6, (unsigned)_isr6, 0x08, 0x8E);
-    idt_create_entry(7, (unsigned)_isr7, 0x08, 0x8E);
+    idt_create_entry(0, &_isr0, 0x08, 0x8E);
+    idt_create_entry(1, &_isr1, 0x08, 0x8E);
+    idt_create_entry(2, &_isr2, 0x08, 0x8E);
+    idt_create_entry(3, &_isr3, 0x08, 0x8E);
+    idt_create_entry(4, &_isr4, 0x08, 0x8E);
+    idt_create_entry(5, &_isr5, 0x08, 0x8E);
+    idt_create_entry(6, &_isr6, 0x08, 0x8E);
+    idt_create_entry(7, &_isr7, 0x08, 0x8E);
 
-    idt_create_entry(8, (unsigned)_isr8, 0x08, 0x8E);
-    idt_create_entry(9, (unsigned)_isr9, 0x08, 0x8E);
-    idt_create_entry(10, (unsigned)_isr10, 0x08, 0x8E);
-    idt_create_entry(11, (unsigned)_isr11, 0x08, 0x8E);
-    idt_create_entry(12, (unsigned)_isr12, 0x08, 0x8E);
-    idt_create_entry(13, (unsigned)_isr13, 0x08, 0x8E);
-    idt_create_entry(14, (unsigned)_isr14, 0x08, 0x8E);
-    idt_create_entry(15, (unsigned)_isr15, 0x08, 0x8E);
+    idt_create_entry(8, &_isr8, 0x08, 0x8E);
+    idt_create_entry(9, &_isr9, 0x08, 0x8E);
+    idt_create_entry(10, &_isr10, 0x08, 0x8E);
+    idt_create_entry(11, &_isr11, 0x08, 0x8E);
+    idt_create_entry(12, &_isr12, 0x08, 0x8E);
+    idt_create_entry(13, &_isr13, 0x08, 0x8E);
+    idt_create_entry(14, &_isr14, 0x08, 0x8E);
+    idt_create_entry(15, &_isr15, 0x08, 0x8E);
 
-    idt_create_entry(16, (unsigned)_isr16, 0x08, 0x8E);
-    idt_create_entry(17, (unsigned)_isr17, 0x08, 0x8E);
-    idt_create_entry(18, (unsigned)_isr18, 0x08, 0x8E);
-    idt_create_entry(19, (unsigned)_isr19, 0x08, 0x8E);
-    idt_create_entry(20, (unsigned)_isr20, 0x08, 0x8E);
-    idt_create_entry(21, (unsigned)_isr21, 0x08, 0x8E);
-    idt_create_entry(22, (unsigned)_isr22, 0x08, 0x8E);
-    idt_create_entry(23, (unsigned)_isr23, 0x08, 0x8E);
+    idt_create_entry(16, &_isr16, 0x08, 0x8E);
+    idt_create_entry(17, &_isr17, 0x08, 0x8E);
+    idt_create_entry(18, &_isr18, 0x08, 0x8E);
+    idt_create_entry(19, &_isr19, 0x08, 0x8E);
+    idt_create_entry(20, &_isr20, 0x08, 0x8E);
+    idt_create_entry(21, &_isr21, 0x08, 0x8E);
+    idt_create_entry(22, &_isr22, 0x08, 0x8E);
+    idt_create_entry(23, &_isr23, 0x08, 0x8E);
 
-    idt_create_entry(24, (unsigned)_isr24, 0x08, 0x8E);
-    idt_create_entry(25, (unsigned)_isr25, 0x08, 0x8E);
-    idt_create_entry(26, (unsigned)_isr26, 0x08, 0x8E);
-    idt_create_entry(27, (unsigned)_isr27, 0x08, 0x8E);
-    idt_create_entry(28, (unsigned)_isr28, 0x08, 0x8E);
-    idt_create_entry(29, (unsigned)_isr29, 0x08, 0x8E);
-    idt_create_entry(30, (unsigned)_isr30, 0x08, 0x8E);
-    idt_create_entry(31, (unsigned)_isr31, 0x08, 0x8E);
+    idt_create_entry(24, &_isr24, 0x08, 0x8E);
+    idt_create_entry(25, &_isr25, 0x08, 0x8E);
+    idt_create_entry(26, &_isr26, 0x08, 0x8E);
+    idt_create_entry(27, &_isr27, 0x08, 0x8E);
+    idt_create_entry(28, &_isr28, 0x08, 0x8E);
+    idt_create_entry(29, &_isr29, 0x08, 0x8E);
+    idt_create_entry(30, &_isr30, 0x08, 0x8E);
+    idt_create_entry(31, &_isr31, 0x08, 0x8E);
 
     print_something("exception isr initialized\n");
 }
@@ -121,14 +124,10 @@ void isrs_initialize()
 *  endless loop. All ISRs disable interrupts while they are being
 *  serviced as a 'locking' mechanism to prevent an IRQ from
 *  happening and messing up kernel data structures */
-void fault_handler(struct regs *r)
+void fault_handler()
 {
-    if (r->int_no < 32)
-    {
-        print_something(exception_messages[r->int_no]);
-        print_something("\nException. System Halted!\n");
-        for (;;);
-    }
+	print_something("\nException. System Halted!\n");
+	for (;;);
 }
 
 
@@ -142,7 +141,7 @@ void *irq_routines[16] =
 };
 
 /* This installs a custom IRQ handler for the given IRQ */
-void irq_install_handler(int irq, void (*handler)(struct regs *r))
+void irq_install_handler(int irq, void (*handler)())
 {
     irq_routines[irq] = handler;
 }
@@ -160,22 +159,22 @@ void irq_initialize()
 {
     /* irq_remap(); do it in pic initialization */
 
-    idt_create_entry(32, (unsigned)_irq0, 0x08, 0x8E);
-    idt_create_entry(33, (unsigned)_irq1, 0x08, 0x8E);
-    idt_create_entry(34, (unsigned)_irq2, 0x08, 0x8E);
-    idt_create_entry(35, (unsigned)_irq3, 0x08, 0x8E);
-    idt_create_entry(36, (unsigned)_irq4, 0x08, 0x8E);
-    idt_create_entry(37, (unsigned)_irq5, 0x08, 0x8E);
-    idt_create_entry(38, (unsigned)_irq6, 0x08, 0x8E);
-    idt_create_entry(39, (unsigned)_irq7, 0x08, 0x8E);
-    idt_create_entry(40, (unsigned)_irq8, 0x08, 0x8E);
-    idt_create_entry(41, (unsigned)_irq9, 0x08, 0x8E);
-    idt_create_entry(42, (unsigned)_irq10, 0x08, 0x8E);
-    idt_create_entry(43, (unsigned)_irq11, 0x08, 0x8E);
-    idt_create_entry(44, (unsigned)_irq12, 0x08, 0x8E);
-    idt_create_entry(45, (unsigned)_irq13, 0x08, 0x8E);
-    idt_create_entry(46, (unsigned)_irq14, 0x08, 0x8E);
-    idt_create_entry(47, (unsigned)_irq15, 0x08, 0x8E);
+    idt_create_entry(32, &_irq0, 0x08, 0x8E);
+    idt_create_entry(33, &_irq1, 0x08, 0x8E);
+    idt_create_entry(34, &_irq2, 0x08, 0x8E);
+    idt_create_entry(35, &_irq3, 0x08, 0x8E);
+    idt_create_entry(36, &_irq4, 0x08, 0x8E);
+    idt_create_entry(37, &_irq5, 0x08, 0x8E);
+    idt_create_entry(38, &_irq6, 0x08, 0x8E);
+    idt_create_entry(39, &_irq7, 0x08, 0x8E);
+    idt_create_entry(40, &_irq8, 0x08, 0x8E);
+    idt_create_entry(41, &_irq9, 0x08, 0x8E);
+    idt_create_entry(42, &_irq10, 0x08, 0x8E);
+    idt_create_entry(43, &_irq11, 0x08, 0x8E);
+    idt_create_entry(44, &_irq12, 0x08, 0x8E);
+    idt_create_entry(45, &_irq13, 0x08, 0x8E);
+    idt_create_entry(46, &_irq14, 0x08, 0x8E);
+    idt_create_entry(47, &_irq15, 0x08, 0x8E);
     
     print_something("irq initialized\n");
 }
@@ -190,32 +189,40 @@ void irq_initialize()
 *  interrupt at BOTH controllers, otherwise, you only send
 *  an EOI command to the first controller. If you don't send
 *  an EOI, you won't raise any more IRQs */
-void irq_handler(struct regs *r)
+void high_irq_handler()
 {
-    /* This is a blank function pointer */
-    void (*handler)(struct regs *r);
-
-    /* Find out if we have a custom handler to run for this
-    *  IRQ, and then finally, run it */
-    handler = irq_routines[r->int_no - 32];
-    if (handler)
-    {
-        handler(r);
-    }
-
-    print_something("some interrupt happened\n");
+    print_something("some high interrupt happened\n");
 
     /* If the IDT entry that was invoked was greater than 40
     *  (meaning IRQ8 - 15), then we need to send an EOI to
     *  the slave controller */
-    if (r->int_no >= 40)
-    {
-        outb(0xA0, 0x20);
-    }
+    outb(0xA0, 0x20);
 
     /* In either case, we need to send an EOI to the master
     *  interrupt controller too */
     outb(0x20, 0x20);
+}
+
+void low_irq_handler()
+{
+    print_something("some low interrupt happened\n");
+
+    /* If the IDT entry that was invoked was greater than 40
+    *  (meaning IRQ8 - 15), then we need to send an EOI to
+    *  the slave controller */
+    /* outb(0xA0, 0x20); */
+
+    /* In either case, we need to send an EOI to the master
+    *  interrupt controller too */
+    outb(0x20, 0x20);
+}
+
+void keyboard_handler()
+{
+	uint8_t scancode = inb(0x60);
+	print_something("x");
+	/* todo: uint8_t character = convert_scancode_ascii(scancode); */
+	outb(0x20, 0x20);
 }
 
 
@@ -224,7 +231,8 @@ void idt_initialize(void)
 	idt_ptr.limit = (sizeof (struct IDT_PTR) * 256) - 1;
 	idt_ptr.base = (uint32_t) &idt;
 
-	for(uint8_t i = 48; i < 256; i++)				// Fill in the remaining entries with a standard isr
+	/* Fill in the remaining entries with a standard isr */
+	for(uint16_t i = 48; i < 256; i++)
 	{
 		idt_create_entry(i, &int_general, 0x08, 0x8E);
 	}
