@@ -25,7 +25,7 @@ void kernel_main(void)
 	/* create irq handlers */
 	irq_initialize();
 
-	/* test_terminal_output(); */
+	test_terminal_output();
 
 	/* not necessary, the boot.s already did */
 	/* while(1)
