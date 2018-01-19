@@ -48,6 +48,30 @@ void pic_send_eoi(unsigned char irq)
 	outb(PIC1_COMMAND,PIC_EOI);
 }
 
+/* remap version 1
+*  Normally, IRQs 0 to 7 are mapped to entries 8 to 15. This
+*  is a problem in protected mode, because IDT entry 8 is a
+*  Double Fault! Without remapping, every time IRQ0 fires,
+*  you get a Double Fault Exception, which is NOT actually
+*  what's happening. We send commands to the Programmable
+*  Interrupt Controller (PICs - also called the 8259's) in
+*  order to make IRQ0 to 15 be remapped to IDT entries 32 to
+*  47 */
+void irq_remap(void)
+{
+    outb(0x20, 0x11);
+    outb(0xA0, 0x11);
+    outb(0x21, 0x20);
+    outb(0xA1, 0x28);
+    outb(0x21, 0x04);
+    outb(0xA1, 0x02);
+    outb(0x21, 0x01);
+    outb(0xA1, 0x01);
+    outb(0x21, 0x0);
+    outb(0xA1, 0x0);
+}
+
+/* remap version 2 */
 void pic_remap(int offset1, int offset2)
 {
 	unsigned char a1, a2;
@@ -77,6 +101,29 @@ void pic_remap(int offset1, int offset2)
 	outb(PIC2_DATA, a2);
 }
 
+/* remap version 3 */
+unsigned int remappic()
+{
+	outb(0x20, 0x11);		// Initilisation instruction
+	outb(0xA0, 0x11);
+		
+	outb(0x21, 0x20);		// Map the first 8 interrupts to 0x20
+	outb(0xA1, 0x28);		// Map 8 - 15 interrupts to 0x28
+
+	outb(0x21, 0x04);		// Tell the pic how its connected 
+	outb(0xA1, 0x02);		
+	
+	outb(0x21, 0x01);		// Tell the mode it is operating in
+	outb(0xA1, 0x01);
+
+	outb(0x21, 0xfd);
+	outb(0xA1, 0xff);
+
+  return 0;
+}
+
+
+
 /* Helper func */
 uint16_t __pic_get_irq_reg(int ocw3)
 {
@@ -103,6 +150,7 @@ void pic_initialize(void)
 {
 	/* master offset = 0x20; slave offset = 0x28 */
 	/* pic_remap(0x20, 0x28); */
+	remappic();
 
 	print_something("pic initialized\n");
 }
